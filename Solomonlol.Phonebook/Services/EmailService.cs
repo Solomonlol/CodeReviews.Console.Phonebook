@@ -5,11 +5,14 @@ using System.Text;
 
 namespace Backend.Services
 {
-    internal class EmailService : IMessageService
+    internal class EmailService : IMessage
     {
-        public async Task SendMessageAsync(string message)
+        public string Sender { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string Receiver { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public Task SendMessageAsync(string message, string sender, string receiver)
         {
-            
+            throw new NotImplementedException();
         }
     }
 }
