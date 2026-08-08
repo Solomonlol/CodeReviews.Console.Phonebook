@@ -1,29 +1,35 @@
-﻿using Backend.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Backend.Interfaces;
+using Backend.Models;
 
 namespace Backend.Repositories
 {
-    internal class UnitOfWork : IDisposable
+    internal class UnitOfWork : IDisposable, IUnitOfWork
     {
-        private ApplicationContext _context = new ApplicationContext();
-        private Repository<User> _userRepisitory;
-        private Repository<Contact> _contactRepository;
+        private readonly ApplicationContext _context;
+        public IRepository<User> _userRepository;
+        public IRepository<Contact> _contactRepository;
 
-        public Repository<User> UserRepository
+        public UnitOfWork(ApplicationContext context, IRepository<User> users, IRepository<Contact> contacts)
+        {
+            _context = context;
+            _userRepository = users;
+            _contactRepository = contacts;
+        }
+
+        public IRepository<User> Users
+
         {
             get
             {
-                if(_userRepisitory==null)
+                if(_userRepository==null)
                 {
-                    _userRepisitory = new Repository<User>(_context);
+                    _userRepository = new Repository<User>(_context);
                 }
-                return _userRepisitory;
+                return _userRepository;
             }
         }
 
-        public Repository<Contact> ContactRepository
+        public IRepository<Contact> Contacts
         {
             get
             {
@@ -35,9 +41,9 @@ namespace Backend.Repositories
             }
         }
 
-        public async Task Save()
+        public async Task<int> SaveAsync()
         {
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
         }
 
         private bool _disposed = false;

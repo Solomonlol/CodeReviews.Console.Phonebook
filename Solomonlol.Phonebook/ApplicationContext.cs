@@ -7,32 +7,18 @@ namespace Backend
 {
     internal class ApplicationContext : DbContext
     {
-        private readonly string _connectionString;
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Contact> Contacts { get; set; } = null!;
 
-        public ApplicationContext() 
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) :base(options) 
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-            _connectionString = configuration.GetConnectionString("PostgresConnection");
-            Database.EnsureCreated();
-        }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if(!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseNpgsql(_connectionString);
-            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
-                .HasIndex(u => new { u.Email, u.PhoneNumber })
+                .HasIndex(u => new { u.Login, u.Email, u.PhoneNumber })
                 .IsUnique();
 
             modelBuilder.Entity<Contact>()

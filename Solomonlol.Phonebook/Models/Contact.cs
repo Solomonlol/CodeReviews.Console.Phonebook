@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Backend.Models.Dto;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Backend.Models
@@ -10,11 +11,9 @@ namespace Backend.Models
         [Required]
         [MaxLength(100)]
         public string FirstName { get; set; } = string.Empty;
-        public string MiddleName { get; set; } = string.Empty;
-        [Required]
-        [MaxLength(100)]
-        public string LastName { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
+        public string? MiddleName { get; set; } = string.Empty;
+        public string? LastName { get; set; } = string.Empty;
+        public string? Email { get; set; } = string.Empty;
         [Required]
         [MaxLength(50)]
         public string PhoneNumber { get; set; } = string.Empty;
@@ -26,6 +25,16 @@ namespace Backend.Models
         public User User {  get; set; }
 
         public Contact() { }
+
+        public Contact(ContactDto dto)
+        {
+            FirstName = dto.FirstName;
+            MiddleName = dto.MiddleName;
+            LastName = dto.LastName;
+            Email = dto.Email;
+            PhoneNumber = dto.PhoneNumber;
+            Category = dto.Category;
+        }
 
         public Contact(string firstName, string phoneNumber, string category, int userId, string? middleName = "", string? lastName="", string? email="")
         {
