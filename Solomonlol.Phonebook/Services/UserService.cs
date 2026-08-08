@@ -16,7 +16,7 @@ namespace Backend.Services
             _mapper = mapper;
         }
 
-        public async Task<UserDto?> GetUserById(int id, CancellationToken cancellationToken = default)
+        public async Task<UserDto?> GetById(int id, CancellationToken cancellationToken = default)
         {
             var user = await _unitOfWork.Users.Get(id, cancellationToken);
             var dto = new UserDto();
@@ -35,6 +35,7 @@ namespace Backend.Services
             var user = new User();
             _mapper.Map(item, user);
             await _unitOfWork.Users.Create(user, cancellationToken);
+            await _unitOfWork.SaveAsync();
         }
 
         public async Task UpdateAsync(int id, UserDto dto, CancellationToken cancellationToken = default)
@@ -52,6 +53,7 @@ namespace Backend.Services
         public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
             await _unitOfWork.Users.Delete(id, cancellationToken);
+            await _unitOfWork.SaveAsync();
         }
     }
 }

@@ -5,10 +5,12 @@ using System.Text;
 
 namespace Backend.Models.Dto
 {
-    internal class UserDto
+    internal class CreateUserDto
     {
         [Required]
         public string Login { get; set; } = string.Empty;
+        [Required]
+        public string Password { get; set; } = string.Empty;
         [Required]
         public string FirstName { get; set; } = string.Empty;
         public string? MiddleName { get; set; } = string.Empty;
@@ -18,3 +20,4 @@ namespace Backend.Models.Dto
         public string PhoneNumber { get; set; } = string.Empty;
     }
 }
+

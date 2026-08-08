@@ -18,12 +18,22 @@ namespace Backend
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
-                .HasIndex(u => new { u.Login, u.Email, u.PhoneNumber })
+                .HasIndex(u => u.Login)
+                .IsUnique();
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.PhoneNumber)
                 .IsUnique();
 
             modelBuilder.Entity<Contact>()
-                .HasIndex(c => new {c.Email, c.PhoneNumber})
+                .HasIndex(c => c.Email)
                 .IsUnique();
+            modelBuilder.Entity<Contact>()
+                .HasIndex(c => c.PhoneNumber)
+                .IsUnique();
+            
 
             modelBuilder.Entity<Contact>()
                 .HasOne(c => c.User)

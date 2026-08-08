@@ -52,7 +52,8 @@ namespace Backend.Repositories
         {
             if(!_disposed)
             {
-                _context.Dispose();
+                if(disposing)
+                    _context?.Dispose();
             }
             _disposed = true;
         }
