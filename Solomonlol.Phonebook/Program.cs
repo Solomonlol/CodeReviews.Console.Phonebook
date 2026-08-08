@@ -6,13 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-
-//var configuration = new ConfigurationBuilder()
-//    .SetBasePath(Directory.GetCurrentDirectory())
-//    .AddJsonFile("appsettings.json")
-//    .Build();
-//_connectionString = configuration.GetConnectionString("PostgresConnection");
-//Database.EnsureCreated();
 using IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
