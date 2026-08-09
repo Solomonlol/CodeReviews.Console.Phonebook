@@ -1,5 +1,6 @@
 ﻿using Backend;
 using Backend.Interfaces;
+using Backend.Mapping;
 using Backend.Models;
 using Backend.Repositories;
 using Backend.Services;
@@ -17,7 +18,7 @@ using IHost host = Host.CreateDefaultBuilder(args)
             options.UseNpgsql(connectionString));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-        services.AddAutoMapper(typeof(Program));
+        services.AddAutoMapper(typeof(MappingProfile));
         services.AddScoped<UserService>();
         services.AddScoped<ContactService>();
         services.AddScoped<EmailService>();
