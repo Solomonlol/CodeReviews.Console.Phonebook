@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Backend.Models.Dto
 {
-    internal class ContactDto
+    public class ContactDto
     {
         [Required]
         public string FirstName { get; set; } = string.Empty;

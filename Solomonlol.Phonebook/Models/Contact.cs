@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Backend.Models
 {
-    internal class Contact
+    public class Contact
     {
         [Key]
         public int Id { get; set; }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Backend.Interfaces
 {
-    internal interface IService<T, TDto> where T : class where TDto : class
+    public interface IService<T, TDto> where T : class where TDto : class
     {
         Task<TDto?> GetById(int id, CancellationToken cancellationToken = default);
         Task<IEnumerable<TDto>> GetList(CancellationToken cancellationToken = default);

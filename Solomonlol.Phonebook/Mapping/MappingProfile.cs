@@ -7,13 +7,27 @@ using System.Text;
 
 namespace Backend.Mapping
 {
-    internal class MappingProfile : Profile
+    public class MappingProfile : Profile
     {
         public MappingProfile() {
             CreateMap<User, UserDto>();
+            CreateMap<CreateUserDto, User>()
+                .ForMember(u => u.Id, d => d.Ignore())
+                .ForMember(u => u.LoginPasswordHash, d => d.Ignore())
+                .ForMember(u => u.EmailPasswordHash, d => d.Ignore())
+                .ForMember(u => u.Contacts, d => d.Ignore());
             CreateMap<UserDto, User>()
-                .ForMember(d => d.Id, o => o.Ignore())
-                .ForMember(d=>d.)
+                .ForMember(u => u.Id, d => d.Ignore())
+                .ForMember(u => u.LoginPasswordHash, d => d.Ignore())
+                .ForMember(u => u.EmailPasswordHash, d => d.Ignore())
+                .ForMember(u => u.Contacts, d => d.Ignore());
+
+            CreateMap<Contact, ContactDto>();
+            CreateMap<ContactDto, Contact>()
+                .ForMember(c => c.Id, d => d.Ignore())
+                .ForMember(c => c.UserId, d => d.Ignore())
+                .ForMember(c => c.User, d => d.Ignore());
+            
         }
     }
 }

@@ -1,13 +1,16 @@
 ﻿using Backend;
 using Backend.Interfaces;
-using Backend.Models;
 using Backend.Repositories;
 using Backend.Services;
-using Microsoft.AspNetCore.Identity;
+using Backend.Mapping;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using Backend.Models;
+using Microsoft.AspNetCore.Identity;
+using Frontend;
+using Frontend.Commands;
 
 using IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
@@ -22,14 +25,17 @@ using IHost host = Host.CreateDefaultBuilder(args)
         services.AddScoped<ContactService>();
         services.AddScoped<EmailService>();
         services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
+
+        services.AddTransient<UserCommands>();
+        services.AddTransient<UserInterface>();
     }
     )
     .Build();
 
-using (var scope = host.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+using var scope = host.Services.CreateScope();
+var userService = scope.ServiceProvider.GetService<UserService>();
+var contactService = scope.ServiceProvider.GetService<ContactService>();
+var emailService  = scope.ServiceProvider.GetService<EmailService>();
+var userCommands = scope.ServiceProvider.GetService<UserCommands>();
 
-    dbContext.Database.EnsureCreated();
-    //await dbContext.Database.MigrateAsync();
-}
+UserInterface user = new(userCommands);

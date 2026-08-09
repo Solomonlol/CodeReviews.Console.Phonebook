@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Backend.Interfaces
 {
-    internal interface IRepository<T> where T : class
+    public interface IRepository<T> where T : class
     {
         Task<T?> Get(int id, CancellationToken cancellationToken = default);
         Task<IEnumerable<T>> GetList(Expression<Func<T, bool>>? filter = null,

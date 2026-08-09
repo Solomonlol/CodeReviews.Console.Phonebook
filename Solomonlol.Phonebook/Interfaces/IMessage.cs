@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Backend.Interfaces
 {
-    internal interface IMessage
+    public interface IMessage
     {
         Task SendMessageAsync(string header, string message, string password, UserDto sender, ContactDto receiver);
     }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Backend.Repositories
 {
-    internal class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : class
     {
         internal ApplicationContext Context;
 

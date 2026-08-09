@@ -5,7 +5,7 @@ using System.IO;
 
 namespace Backend
 {
-    internal class ApplicationContext : DbContext
+    public class ApplicationContext : DbContext
     {
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Contact> Contacts { get; set; } = null!;

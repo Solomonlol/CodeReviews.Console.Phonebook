@@ -6,7 +6,7 @@ using Backend.Models.Dto;
 
 namespace Backend.Services
 {
-    internal class ContactService : IService<Contact, ContactDto>
+    public class ContactService : IService<Contact, ContactDto>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -20,13 +20,13 @@ namespace Backend.Services
             var contact = new Contact();
             _mapper.Map(item, contact);
             await _unitOfWork.Contacts.Create(contact);
-            await _unitOfWork.SaveAsync();
+            await _unitOfWork.SaveAsync(cancellationToken);
         }
 
         public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
             await _unitOfWork.Contacts.Delete(id, cancellationToken);
-            await _unitOfWork.SaveAsync();
+            await _unitOfWork.SaveAsync(cancellationToken);
         }
 
         public async Task<IEnumerable<ContactDto>> GetList(CancellationToken cancellationToken = default)
@@ -57,7 +57,7 @@ namespace Backend.Services
             _mapper.Map(dto, contact);
 
             await _unitOfWork.Contacts.Update(contact);
-            await _unitOfWork.SaveAsync();
+            await _unitOfWork.SaveAsync(cancellationToken);
         }
     }
 }

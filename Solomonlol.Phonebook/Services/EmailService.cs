@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Backend.Services
 {
-    internal class EmailService : IMessage
+    public class EmailService : IMessage
     {
         public async Task SendMessageAsync(string header, string message, string password, UserDto sender, ContactDto receiver)
         {

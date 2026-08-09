@@ -3,7 +3,7 @@ using Backend.Models;
 
 namespace Backend.Repositories
 {
-    internal class UnitOfWork : IDisposable, IUnitOfWork
+    public class UnitOfWork : IDisposable, IUnitOfWork
     {
         private readonly ApplicationContext _context;
         public IRepository<User> _userRepository;
@@ -41,9 +41,9 @@ namespace Backend.Repositories
             }
         }
 
-        public async Task<int> SaveAsync()
+        public async Task<int> SaveAsync(CancellationToken cancellationToken = default)
         {
-            return await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync(cancellationToken);
         }
 
         private bool _disposed = false;

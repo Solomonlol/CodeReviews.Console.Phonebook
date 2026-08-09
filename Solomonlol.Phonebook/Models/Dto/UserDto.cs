@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Backend.Models.Dto
 {
-    internal class UserDto
+    public class UserDto
     {
         [Required]
         public string Login { get; set; } = string.Empty;

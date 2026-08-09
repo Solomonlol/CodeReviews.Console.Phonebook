@@ -5,19 +5,20 @@ using System.Text;
 
 namespace Backend.Models
 {
-    internal class User
+    public class User
     {
         [Key]
         public int Id { get; set; }
         [Required]
         public string Login {  get; set; }
-        public int PasswordHash { get; set; }
+        public string LoginPasswordHash { get; set; }
         [Required]
         [MaxLength(100)]
         public string FirstName { get; set; } = string.Empty;
         public string? MiddleName { get; set; } = string.Empty;
         public string? LastName { get; set; } = string.Empty;
         public string? Email { get; set; } = string.Empty;
+        public int EmailPasswordHash { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -27,7 +28,7 @@ namespace Backend.Models
 
         public User() { }
 
-        public User(string login, string password, string firstName, string phoneNumber, string? lastName = "", string? email = "", string? middleName = "")
+        public User(string login, string password, string firstName, string phoneNumber, string? lastName = "", string? email = "", int? emailPassword = null, string? middleName = "")
         {
             Login = login;
             FirstName = firstName;
@@ -35,7 +36,6 @@ namespace Backend.Models
             LastName = lastName;
             Email = email;
             PhoneNumber = phoneNumber;
-            PasswordHash = HashCode.Combine(phoneNumber, password);
         }
     }
 }

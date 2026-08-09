@@ -3,17 +3,20 @@ using Backend.Exceptions;
 using Backend.Interfaces;
 using Backend.Models;
 using Backend.Models.Dto;
+using Microsoft.AspNetCore.Identity;
 
 namespace Backend.Services
 {
-    internal class UserService : IService<User, UserDto>
+    public class UserService : IService<User, UserDto>
     {
+        private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IPasswordHasher<User> passwordHasher)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<UserDto?> GetById(int id, CancellationToken cancellationToken = default)
@@ -30,12 +33,16 @@ namespace Backend.Services
             return userList.Select(user => _mapper.Map<UserDto>(user));
         }
 
+        public async Task CreateAsync(CreateUserDto item, CancellationToken cancellationToken = default)
+        {
+            var user = _mapper.Map<User>(item);
+            user.LoginPasswordHash = _passwordHasher.HashPassword(user, item.Password);
+            await _unitOfWork.Users.Create(user, cancellationToken);
+            await _unitOfWork.SaveAsync(cancellationToken);
+        }
         public async Task CreateAsync(UserDto item, CancellationToken cancellationToken = default)
         {
-            var user = new User();
-            _mapper.Map(item, user);
-            await _unitOfWork.Users.Create(user, cancellationToken);
-            await _unitOfWork.SaveAsync();
+            throw new InvalidOperationException("Use CreateAsync(CreateUserDto) instead");
         }
 
         public async Task UpdateAsync(int id, UserDto dto, CancellationToken cancellationToken = default)
@@ -47,13 +54,14 @@ namespace Backend.Services
             _mapper.Map(dto, user);
 
             await _unitOfWork.Users.Update(user, cancellationToken);
-            await _unitOfWork.SaveAsync();
+            await _unitOfWork.SaveAsync(cancellationToken);
         }
 
         public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
             await _unitOfWork.Users.Delete(id, cancellationToken);
-            await _unitOfWork.SaveAsync();
+            await _unitOfWork.SaveAsync(cancellationToken);
         }
+
     }
 }

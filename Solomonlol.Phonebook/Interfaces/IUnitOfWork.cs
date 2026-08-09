@@ -2,11 +2,11 @@
 
 namespace Backend.Interfaces
 {
-    internal interface IUnitOfWork
+    public interface IUnitOfWork
     {
         IRepository<User> Users {  get; }
         IRepository<Contact> Contacts { get; }
 
-        Task<int> SaveAsync();
+        Task<int> SaveAsync(CancellationToken cancellationToken);
     }
 }
