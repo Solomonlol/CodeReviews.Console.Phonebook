@@ -5,18 +5,18 @@ namespace Frontend
 {
     internal class UserInterface
     {
-        private readonly UserCommands _userCommands;
+        private readonly UserMenu _userMenu;
 
-        public UserInterface(UserCommands userCommands)
+        public UserInterface(UserMenu userMenu)
         {
-            _userCommands = userCommands;
+            _userMenu = userMenu;
         }
 
         public async Task Menu()
         {
             while (true)
             {
-                await ViewSubMenu(_userCommands.GetSubMenu(), "Menu");
+                await ViewSubMenu(_userMenu.GetSubMenu(), "Menu");
             }
         }
 

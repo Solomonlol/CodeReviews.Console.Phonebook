@@ -5,10 +5,10 @@ using System.Text;
 
 namespace Frontend.Commands
 {
-    internal class ContactCommands
+    internal class ContactMenu
     {
         private readonly ContactService _contactService;
-        public ContactCommands(ContactService service)
+        public ContactMenu(ContactService service)
         {
             _contactService = service;
         }

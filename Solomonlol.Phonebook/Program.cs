@@ -18,7 +18,10 @@ using IHost host = Host.CreateDefaultBuilder(args)
             options.UseNpgsql(connectionString));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-        services.AddAutoMapper(typeof(MappingProfile));
+        services.AddAutoMapper(cfg =>
+        {
+            cfg.AddProfile<MappingProfile>();
+        });
         services.AddScoped<UserService>();
         services.AddScoped<ContactService>();
         services.AddScoped<EmailService>();

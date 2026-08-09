@@ -36,15 +36,15 @@ namespace Backend.Models
             Category = dto.Category;
         }
 
-        public Contact(string firstName, string phoneNumber, string category, int userId, string? middleName = "", string? lastName="", string? email="")
-        {
-            FirstName = firstName;
-            MiddleName = middleName;
-            LastName = lastName;
-            Email = email;
-            PhoneNumber = phoneNumber;
-            Category = category;
-            UserId = userId;
-        }
+        //public Contact(string firstName, string phoneNumber, string category, int userId, string? middleName = "", string? lastName="", string? email="")
+        //{
+        //    FirstName = firstName;
+        //    MiddleName = middleName;
+        //    LastName = lastName;
+        //    Email = email;
+        //    PhoneNumber = phoneNumber;
+        //    Category = category;
+        //    UserId = userId;
+        //}
     }
 }

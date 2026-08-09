@@ -7,11 +7,11 @@ using System.Text;
 
 namespace Frontend.Commands
 {
-    internal class UserCommands
+    internal class UserMenu
     {
         private readonly UserService _userService;
         private readonly Dictionary<string, Func<Task>> _userMenu;
-        public UserCommands(UserService service)
+        public UserMenu(UserService service)
         {
             _userService = service;
             _userMenu = new()
@@ -42,17 +42,25 @@ namespace Frontend.Commands
                                     new TextPrompt<string>("Email (optional):")
                                     .AllowEmpty()),
             };
+            
+            if (!string.IsNullOrEmpty(dto.Email))
+                while (string.IsNullOrEmpty(dto.EmailPassword))
+                    dto.EmailPassword = AnsiConsole.Prompt(
+                                    new TextPrompt<string>("Email password:")
+                                    .Secret('*'));
+
             await _userService.CreateAsync(dto, cancellationToken);
         }
 
         public async Task DeleteUser(CancellationToken cancellationToken = default)
         {
-
+            //await _userService.DeleteAsync();
         }
 
         public async Task UpdateUser(CancellationToken cancellationToken = default)
         {
-
+            //var id = await _userService.
+            //await _userService.UpdateAsync();
         }
 
         //public async Task DeleteUser(CancellationToken cancellationToken = default)

@@ -15,7 +15,9 @@ namespace Backend.Mapping
                 .ForMember(u => u.Id, d => d.Ignore())
                 .ForMember(u => u.LoginPasswordHash, d => d.Ignore())
                 .ForMember(u => u.EmailPasswordHash, d => d.Ignore())
-                .ForMember(u => u.Contacts, d => d.Ignore());
+                .ForMember(u => u.Contacts, d => d.Ignore())
+                .ForAllMembers(u=>u.NullSubstitute(""));
+
             CreateMap<UserDto, User>()
                 .ForMember(u => u.Id, d => d.Ignore())
                 .ForMember(u => u.LoginPasswordHash, d => d.Ignore())

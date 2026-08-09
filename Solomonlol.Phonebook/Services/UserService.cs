@@ -35,10 +35,22 @@ namespace Backend.Services
 
         public async Task CreateAsync(CreateUserDto item, CancellationToken cancellationToken = default)
         {
-            var user = _mapper.Map<User>(item);
-            user.LoginPasswordHash = _passwordHasher.HashPassword(user, item.Password);
-            await _unitOfWork.Users.Create(user, cancellationToken);
-            await _unitOfWork.SaveAsync(cancellationToken);
+            try
+            {
+                var user = _mapper.Map<User>(item);
+                if(!string.IsNullOrEmpty(user.Email))
+                    user.EmailPasswordHash = _passwordHasher.HashPassword(user, item.EmailPassword);
+                user.LoginPasswordHash = _passwordHasher.HashPassword(user, item.Password);
+                
+                await _unitOfWork.Users.Create(user, cancellationToken);
+                await _unitOfWork.SaveAsync(cancellationToken);
+            }
+            catch(AutoMapperMappingException ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException?.Message);
+                throw;
+            }
         }
         public async Task CreateAsync(UserDto item, CancellationToken cancellationToken = default)
         {

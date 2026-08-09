@@ -18,7 +18,7 @@ namespace Backend.Models
         public string? MiddleName { get; set; } = string.Empty;
         public string? LastName { get; set; } = string.Empty;
         public string? Email { get; set; } = string.Empty;
-        public int EmailPasswordHash { get; set; }
+        public string? EmailPasswordHash { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(50)]
@@ -28,14 +28,14 @@ namespace Backend.Models
 
         public User() { }
 
-        public User(string login, string password, string firstName, string phoneNumber, string? lastName = "", string? email = "", int? emailPassword = null, string? middleName = "")
-        {
-            Login = login;
-            FirstName = firstName;
-            MiddleName = middleName;
-            LastName = lastName;
-            Email = email;
-            PhoneNumber = phoneNumber;
-        }
+        //public User(string login, string password, string firstName, string phoneNumber, string? lastName = "", string? email = "", int? emailPassword = null, string? middleName = "")
+        //{
+        //    Login = login;
+        //    FirstName = firstName;
+        //    MiddleName = middleName;
+        //    LastName = lastName;
+        //    Email = email;
+        //    PhoneNumber = phoneNumber;
+        //}
     }
 }

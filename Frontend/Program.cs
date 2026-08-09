@@ -20,22 +20,30 @@ using IHost host = Host.CreateDefaultBuilder(args)
             options.UseNpgsql(connectionString));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-        services.AddAutoMapper(typeof(MappingProfile));
+        services.AddAutoMapper(cfg =>
+        {
+            cfg.AddProfile<MappingProfile>();
+        });
         services.AddScoped<UserService>();
         services.AddScoped<ContactService>();
         services.AddScoped<EmailService>();
         services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 
-        services.AddTransient<UserCommands>();
+        services.AddTransient<UserMenu>();
         services.AddTransient<UserInterface>();
     }
     )
     .Build();
 
 using var scope = host.Services.CreateScope();
+
+var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+dbContext.Database.EnsureCreated();
+
 var userService = scope.ServiceProvider.GetService<UserService>();
 var contactService = scope.ServiceProvider.GetService<ContactService>();
 var emailService  = scope.ServiceProvider.GetService<EmailService>();
-var userCommands = scope.ServiceProvider.GetService<UserCommands>();
+var userCommands = scope.ServiceProvider.GetService<UserMenu>();
 
 UserInterface user = new(userCommands);
+await user.Menu();
