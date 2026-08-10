@@ -1,9 +1,7 @@
 ﻿using Backend.Models.Dto;
 using Backend.Services;
 using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Backend.Validation;
 
 namespace Frontend.Commands
 {
@@ -30,7 +28,13 @@ namespace Frontend.Commands
                                     new TextPrompt<string>("Password:")
                                     .Secret('*')),
                 PhoneNumber = AnsiConsole.Prompt(
-                                    new TextPrompt<string>("Phone number:")),
+                                    new TextPrompt<string>("Phone number:")
+                                    .Validate(input=>
+                                    {
+                                        return Validation.IsPhoneNumber(input)
+                                        ? ValidationResult.Success()
+                                        : ValidationResult.Error("[red]Invalid input[/]");
+                                    })),
                 FirstName = AnsiConsole.Ask<string>("First name:"),
                 LastName = AnsiConsole.Prompt(
                                     new TextPrompt<string>("Last name (optional):")
@@ -38,9 +42,21 @@ namespace Frontend.Commands
                 MiddleName = AnsiConsole.Prompt(
                                     new TextPrompt<string>("Middle name (optional):")
                                     .AllowEmpty()),
+
                 Email = AnsiConsole.Prompt(
                                     new TextPrompt<string>("Email (optional):")
-                                    .AllowEmpty()),
+                                    .AllowEmpty()
+                                    .Validate(input =>
+                                    {
+                                        if(string.IsNullOrEmpty(input))
+                                            return ValidationResult.Success();
+
+                                        return Validation.IsEmailAddress(input)
+                                        ? ValidationResult.Success()
+                                        : ValidationResult.Error("[red]Invalid input[/]");
+                                    }
+                ))
+
             };
             
             if (!string.IsNullOrEmpty(dto.Email))
