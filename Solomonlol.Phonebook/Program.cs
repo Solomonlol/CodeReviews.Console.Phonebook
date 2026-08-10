@@ -13,11 +13,13 @@ using Microsoft.Extensions.Hosting;
 using IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
-        string connectionString = context.Configuration.GetConnectionString("PostgresConnection");
+        string? connectionString = context.Configuration.GetConnectionString("PostgresConnection");
         services.AddDbContext<ApplicationContext>(options =>
             options.UseNpgsql(connectionString));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IContactRepository, ContactRepository>();
         services.AddAutoMapper(cfg =>
         {
             cfg.AddProfile<MappingProfile>();

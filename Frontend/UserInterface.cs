@@ -6,10 +6,12 @@ namespace Frontend
     internal class UserInterface
     {
         private readonly UserMenu _userMenu;
+        private readonly ContactMenu _contactMenu;
 
-        public UserInterface(UserMenu userMenu)
+        public UserInterface(UserMenu userMenu, ContactMenu contactMenu)
         {
             _userMenu = userMenu;
+            _contactMenu = contactMenu;
         }
 
         public async Task Menu()

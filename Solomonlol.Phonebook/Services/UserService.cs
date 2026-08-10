@@ -14,9 +14,9 @@ namespace Backend.Services
         private readonly IMapper _mapper;
         public UserService(IUnitOfWork unitOfWork, IMapper mapper, IPasswordHasher<User> passwordHasher)
         {
+            _passwordHasher = passwordHasher;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _passwordHasher = passwordHasher;
         }
 
         public async Task<UserDto?> GetById(int id, CancellationToken cancellationToken = default)

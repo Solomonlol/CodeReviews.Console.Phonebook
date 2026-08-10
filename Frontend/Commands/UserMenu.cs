@@ -21,51 +21,57 @@ namespace Frontend.Commands
 
         public async Task CreateUser(CancellationToken cancellationToken = default)
         {
-            CreateUserDto dto = new CreateUserDto
+            try
             {
-                Login = AnsiConsole.Ask<string>("Login:"),
-                Password = AnsiConsole.Prompt(
-                                    new TextPrompt<string>("Password:")
-                                    .Secret('*')),
-                PhoneNumber = AnsiConsole.Prompt(
-                                    new TextPrompt<string>("Phone number:")
-                                    .Validate(input=>
-                                    {
-                                        return Validation.IsPhoneNumber(input)
-                                        ? ValidationResult.Success()
-                                        : ValidationResult.Error("[red]Invalid input[/]");
-                                    })),
-                FirstName = AnsiConsole.Ask<string>("First name:"),
-                LastName = AnsiConsole.Prompt(
-                                    new TextPrompt<string>("Last name (optional):")
-                                    .AllowEmpty()),
-                MiddleName = AnsiConsole.Prompt(
-                                    new TextPrompt<string>("Middle name (optional):")
-                                    .AllowEmpty()),
+                CreateUserDto dto = new CreateUserDto
+                {
+                    Login = AnsiConsole.Ask<string>("Login:"),
+                    Password = AnsiConsole.Prompt(
+                                        new TextPrompt<string>("Password:")
+                                        .Secret('*')),
+                    PhoneNumber = AnsiConsole.Prompt(
+                                        new TextPrompt<string>("Phone number:")
+                                        .Validate(input =>
+                                        {
+                                            return Validation.IsPhoneNumber(input)
+                                            ? ValidationResult.Success()
+                                            : ValidationResult.Error("[red]Invalid input[/]");
+                                        })),
+                    FirstName = AnsiConsole.Ask<string>("First name:"),
+                    LastName = AnsiConsole.Prompt(
+                                        new TextPrompt<string>("Last name (optional):")
+                                        .AllowEmpty()),
+                    MiddleName = AnsiConsole.Prompt(
+                                        new TextPrompt<string>("Middle name (optional):")
+                                        .AllowEmpty()),
 
-                Email = AnsiConsole.Prompt(
-                                    new TextPrompt<string>("Email (optional):")
-                                    .AllowEmpty()
-                                    .Validate(input =>
-                                    {
-                                        if(string.IsNullOrEmpty(input))
-                                            return ValidationResult.Success();
+                    Email = AnsiConsole.Prompt(
+                                        new TextPrompt<string>("Email (optional):")
+                                        .AllowEmpty()
+                                        .Validate(input =>
+                                        {
+                                            if (string.IsNullOrEmpty(input))
+                                                return ValidationResult.Success();
 
-                                        return Validation.IsEmailAddress(input)
-                                        ? ValidationResult.Success()
-                                        : ValidationResult.Error("[red]Invalid input[/]");
-                                    }
-                ))
+                                            return Validation.IsEmailAddress(input)
+                                            ? ValidationResult.Success()
+                                            : ValidationResult.Error("[red]Invalid input[/]");
+                                        }
+                    ))
+                };
 
-            };
-            
-            if (!string.IsNullOrEmpty(dto.Email))
-                while (string.IsNullOrEmpty(dto.EmailPassword))
-                    dto.EmailPassword = AnsiConsole.Prompt(
-                                    new TextPrompt<string>("Email password:")
-                                    .Secret('*'));
+                if (!string.IsNullOrEmpty(dto.Email))
+                    while (string.IsNullOrEmpty(dto.EmailPassword))
+                        dto.EmailPassword = AnsiConsole.Prompt(
+                                        new TextPrompt<string>("Email password:")
+                                        .Secret('*'));
 
-            await _userService.CreateAsync(dto, cancellationToken);
+                await _userService.CreateAsync(dto, cancellationToken);
+            }
+            catch(Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]{ex.Message}[/]");
+            }
         }
 
         public async Task DeleteUser(CancellationToken cancellationToken = default)

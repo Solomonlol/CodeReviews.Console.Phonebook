@@ -15,11 +15,13 @@ using Frontend.Commands;
 using IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
-        string connectionString = context.Configuration.GetConnectionString("PostgresConnection");
+        string? connectionString = context.Configuration.GetConnectionString("PostgresConnection");
         services.AddDbContext<ApplicationContext>(options =>
             options.UseNpgsql(connectionString));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IContactRepository, ContactRepository>();
         services.AddAutoMapper(cfg =>
         {
             cfg.AddProfile<MappingProfile>();
@@ -43,7 +45,8 @@ dbContext.Database.EnsureCreated();
 var userService = scope.ServiceProvider.GetService<UserService>();
 var contactService = scope.ServiceProvider.GetService<ContactService>();
 var emailService  = scope.ServiceProvider.GetService<EmailService>();
-var userCommands = scope.ServiceProvider.GetService<UserMenu>();
+var userMenu = scope.ServiceProvider.GetService<UserMenu>();
+var contactMenu = scope.ServiceProvider.GetService<ContactMenu>();
 
-UserInterface user = new(userCommands);
+UserInterface user = new(userMenu, contactMenu);
 await user.Menu();

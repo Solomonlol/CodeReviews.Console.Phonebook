@@ -1,46 +1,19 @@
-﻿//using Backend.Interfaces;
-//using Backend.Models;
-//using Microsoft.EntityFrameworkCore;
-//using System;
-//using System.Collections.Generic;
-//using System.Text;
+﻿using Backend.Interfaces;
+using Backend.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-//namespace Backend.Repositories
-//{
-//    internal class ContactRepository : IRepository<Contact>
-//    {
+namespace Backend.Repositories
+{
+    public class ContactRepository : Repository<Contact>, IContactRepository
+    {
+        public ContactRepository(ApplicationContext context) : base(context) { }
 
-//        private ApplicationContext _context;
-//        public ContactRepository(ApplicationContext context)
-//        {
-//            _context = context;
-//        }
-
-//        public async Task Create(Contact item, CancellationToken cancellationToken = default)
-//        {
-//            await _context.Contacts.AddAsync(item);
-//        }
-
-//        public async Task Delete(int id, CancellationToken cancellationToken = default)
-//        {
-//            var item = await _context.Contacts.FindAsync(id, cancellationToken);
-//            if(item!=null)
-//                _context.Contacts.Remove(item);
-//        }
-//        public async Task Update(Contact item, CancellationToken cancellationToken = default)
-//        {
-//            _context.Entry(item).State = EntityState.Modified;
-//            await _context.SaveChangesAsync(cancellationToken);
-//        }
-
-//        public async Task<Contact?> Get(int id, CancellationToken cancellationToken = default)
-//        {
-//            return await _context.Contacts.FindAsync(id, cancellationToken);
-//        }
-
-//        public async Task<IEnumerable<Contact>> GetList(CancellationToken cancellationToken = default)
-//        {
-//            return await _context.Contacts.ToListAsync(cancellationToken);
-//        }
-//    }
-//}
+        public async Task<Contact?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken = default)
+        {
+            return await DbSet.FirstOrDefaultAsync(c=>c.PhoneNumber == phoneNumber);
+        }
+    }
+}

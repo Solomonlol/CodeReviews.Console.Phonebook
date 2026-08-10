@@ -6,36 +6,36 @@ namespace Backend.Repositories
     public class UnitOfWork : IDisposable, IUnitOfWork
     {
         private readonly ApplicationContext _context;
-        public IRepository<User> _userRepository;
-        public IRepository<Contact> _contactRepository;
+        public IUserRepository _userRepository;
+        public IContactRepository _contactRepository;
 
-        public UnitOfWork(ApplicationContext context, IRepository<User> users, IRepository<Contact> contacts)
+        public UnitOfWork(ApplicationContext context, IUserRepository users, IContactRepository contacts)
         {
             _context = context;
             _userRepository = users;
             _contactRepository = contacts;
         }
 
-        public IRepository<User> Users
+        public IUserRepository Users
 
         {
             get
             {
                 if(_userRepository==null)
                 {
-                    _userRepository = new Repository<User>(_context);
+                    _userRepository = new UserRepository(_context);
                 }
                 return _userRepository;
             }
         }
 
-        public IRepository<Contact> Contacts
+        public IContactRepository Contacts
         {
             get
             {
                 if (_contactRepository == null)
                 {
-                    _contactRepository = new Repository<Contact>(_context);
+                    _contactRepository = new ContactRepository(_context);
                 }
                 return _contactRepository;
             }
