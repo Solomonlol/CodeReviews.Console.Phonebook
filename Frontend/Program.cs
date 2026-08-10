@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Backend.Models;
 using Microsoft.AspNetCore.Identity;
 using Frontend;
-using Frontend.Commands;
+using Frontend.Menus;
 
 using IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
@@ -32,7 +32,11 @@ using IHost host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 
         services.AddTransient<UserMenu>();
-        services.AddTransient<UserInterface>();
+        //services.AddTransient<UserInterface>();
+        services.AddScoped<IMenu, UserMenu>();
+        services.AddScoped<IMenu, ContactMenu>();
+        services.AddScoped<IMenu, UserInterface>();
+
     }
     )
     .Build();
@@ -47,6 +51,11 @@ var contactService = scope.ServiceProvider.GetService<ContactService>();
 var emailService  = scope.ServiceProvider.GetService<EmailService>();
 var userMenu = scope.ServiceProvider.GetService<UserMenu>();
 var contactMenu = scope.ServiceProvider.GetService<ContactMenu>();
+var mainMenu = scope.ServiceProvider.GetService<UserInterface>();
 
-UserInterface user = new(userMenu, contactMenu);
-await user.Menu();
+var userInterface = new UserInterface("Main menu");
+userInterface.AddSubMenu("User menu", userMenu);
+userInterface.AddSubMenu("Contact menu", contactMenu);
+userInterface.AddExitItem("Exit");
+
+await userInterface.RunAsync();
