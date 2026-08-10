@@ -2,6 +2,7 @@
 using Backend.Services;
 using Spectre.Console;
 using Backend.Validation;
+using Backend.Exceptions;
 
 namespace Frontend.Commands
 {
@@ -15,7 +16,8 @@ namespace Frontend.Commands
             _userMenu = new()
             {
                 { "Back", () => Task.CompletedTask },
-                { "Create user", ()=>CreateUser() }
+                { "Create user", ()=>CreateUser() },
+                { "Delete user", ()=>DeleteUser() }
             };
         }
 
@@ -76,7 +78,17 @@ namespace Frontend.Commands
 
         public async Task DeleteUser(CancellationToken cancellationToken = default)
         {
-            //await _userService.DeleteAsync();
+            var userList = await _userService.GetList(cancellationToken);
+            if (userList.Any())
+            {
+                var userToDelete = await AnsiConsole.PromptAsync(new SelectionPrompt<string>()
+                                                .Title($"Choose user [red]to delete:[/]")
+                                                .AddChoices(userList.Select(u => u.Login)));
+
+                var password = await AnsiConsole.AskAsync<string>("Enter user [green]password[/]");
+                await _userService.DeleteAsync(userToDelete, password);
+            }
+            else throw new NotFoundException("[red]Not found any users[/]");
         }
 
         public async Task UpdateUser(CancellationToken cancellationToken = default)

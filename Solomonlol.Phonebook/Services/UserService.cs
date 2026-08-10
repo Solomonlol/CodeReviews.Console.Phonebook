@@ -74,6 +74,18 @@ namespace Backend.Services
             await _unitOfWork.Users.Delete(id, cancellationToken);
             await _unitOfWork.SaveAsync(cancellationToken);
         }
+        public async Task DeleteAsync(string login, string password, CancellationToken cancellationToken = default)
+        {
+            var user = await _unitOfWork.Users.GetByLogin(login, cancellationToken);
+            if (user is null)
+                throw new NotFoundException("User not found");
 
+            var result = _passwordHasher.VerifyHashedPassword(user, user.LoginPasswordHash, password);
+
+            if (result == PasswordVerificationResult.Failed)
+                throw new ValidationException("Invalid password");
+
+            await DeleteAsync(user.Id, cancellationToken);
+        }
     }
 }

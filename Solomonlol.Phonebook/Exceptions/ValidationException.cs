@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Backend.Exceptions
 {
-    internal class ValidationException : Exception
+    public class ValidationException : Exception
     {
         public ValidationException() { }
 
