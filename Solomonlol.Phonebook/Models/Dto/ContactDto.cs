@@ -18,5 +18,7 @@ namespace Backend.Models.Dto
         public string PhoneNumber { get; set; } = string.Empty;
         [Required]
         public string Category { get; set; } = string.Empty;
+
+        public int UserId { get; set; }
     }
 }

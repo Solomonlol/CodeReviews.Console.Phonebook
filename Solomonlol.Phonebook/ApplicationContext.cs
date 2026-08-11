@@ -28,10 +28,10 @@ namespace Backend
                 .IsUnique();
 
             modelBuilder.Entity<Contact>()
-                .HasIndex(c => c.Email)
+                .HasIndex(c => new { c.Email, c.UserId })
                 .IsUnique();
             modelBuilder.Entity<Contact>()
-                .HasIndex(c => c.PhoneNumber)
+                .HasIndex(c => new { c.PhoneNumber, c.UserId })
                 .IsUnique();
             
 

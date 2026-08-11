@@ -18,6 +18,8 @@ namespace Frontend.Menus
             _emailService = service;
             _currentUserService = currentUserService;
             _contactService = contactService;
+            AddItem("Send message", () => Send());
+            AddExitItem("Back");
         }
 
         public async Task Send()
@@ -25,7 +27,7 @@ namespace Frontend.Menus
             var contactList = (await _contactService.GetList()).ToList();
             var contactChoise = await AnsiConsole.PromptAsync(new MultiSelectionPrompt<ContactDto>()
                                                         .Title("Choose who to send the message to:")
-                                                        .UseConverter(c => $"{c.FirstName} | {c.PhoneNumber} | {c.Email}")
+                                                        .UseConverter(c => $"{c.FirstName}\t| {c.LastName}\t| {c.MiddleName}\t| {c.PhoneNumber}\t| {c.Email}\t | {c.Category}")
                                                         .AddChoices(contactList));
             var header = await AnsiConsole.AskAsync<string>("Enter [green]header[/]:");
             var message = await AnsiConsole.AskAsync<string>("Enter your [green]message[/]");

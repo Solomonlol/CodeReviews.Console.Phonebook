@@ -1,6 +1,7 @@
 ﻿using Backend.Interfaces;
 using Backend.Models;
 using Backend.Models.Dto;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -13,14 +14,17 @@ namespace Backend.Services
     {
         private readonly CurrentUserService _currentUserService;
         private readonly EmailPasswordProtection _passwordProtection;
-        public EmailService(CurrentUserService currentUserService)
+        private readonly SmtpSettings _smtpSettings;
+        public EmailService(EmailPasswordProtection passwordProtection, IOptions<SmtpSettings> options)
         {
-            _currentUserService = currentUserService;
+            _passwordProtection = passwordProtection;
+            _smtpSettings = options.Value;
         }
 
         public async Task SendMessageAsync(string header, string message, User sender, ContactDto receiver)
         {
             var password = _passwordProtection.Unprotect(sender.EmailPasswordProtected);
+            Console.WriteLine($"Password:{password}");
             var from = new MailAddress($"{sender.Email}", $"{sender.FirstName} {sender.LastName}");
             var to = new MailAddress($"{receiver.Email}");
             using var m = new MailMessage(from, to)
@@ -29,12 +33,12 @@ namespace Backend.Services
                 Body = $"{message}"
             };
 
-            using var smtp = new SmtpClient("smtp.gmail.com", 587)
+            using var smtp = new SmtpClient(_smtpSettings.Host, _smtpSettings.Port)
             {
                 Credentials = new NetworkCredential($"{sender.Email}", $"{password}"),
-                EnableSsl = true,
+                EnableSsl = _smtpSettings.EnableSsl,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false
+                UseDefaultCredentials = _smtpSettings.UseDefaultCredentials
             };
 
             await smtp.SendMailAsync(m);

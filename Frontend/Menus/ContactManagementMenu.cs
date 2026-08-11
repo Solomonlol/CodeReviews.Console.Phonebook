@@ -16,9 +16,9 @@ namespace Frontend.Menus
         public ContactManagementMenu(ContactService service) : base("Contact management")
         {
             _contactService = service;
-            AddItem("Create user", () => Create());
-            AddItem("Update user", () => Update());
-            AddItem("Delete user", () => Delete());
+            AddItem("Create contact", () => Create());
+            AddItem("Update contact", () => Update());
+            AddItem("Delete contact", () => Delete());
             AddExitItem("Back");
         }
 
@@ -27,6 +27,7 @@ namespace Frontend.Menus
             try
             {
                 var contact = InCreation.Creation<ContactDto>(propertyInputConfig);
+                
                 await _contactService.CreateAsync(contact, cancellationToken);
             }
             catch (NotFoundException ex)
@@ -82,7 +83,7 @@ namespace Frontend.Menus
                 if (contactList.Any())
                 {
                     var contactToDelete = await AnsiConsole.PromptAsync(new SelectionPrompt<ContactDto>()
-                                                        .Title("Choose contact to [red]delete[/]:")
+                                                        .Title("Choose contact to [red]update[/]:")
                                                         .UseConverter(c => $"{c.FirstName} | {c.LastName} | {c.MiddleName} | {c.PhoneNumber} | {c.Email} | {c.Category}")
                                                         .AddChoices(contactList));
 

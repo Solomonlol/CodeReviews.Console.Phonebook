@@ -10,15 +10,18 @@ namespace Backend.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public ContactService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly CurrentUserService _currentUserService;
+        public ContactService(IUnitOfWork unitOfWork, IMapper mapper, CurrentUserService currentUserService )
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _currentUserService = currentUserService;
         }
         public async Task CreateAsync(ContactDto item, CancellationToken cancellationToken = default)
         {
             var contact = new Contact();
             _mapper.Map(item, contact);
+            contact.UserId = _currentUserService.CurrentUser.Id;
             await _unitOfWork.Contacts.Create(contact);
             await _unitOfWork.SaveAsync(cancellationToken);
         }
@@ -40,7 +43,7 @@ namespace Backend.Services
         {
             var contactList = await _unitOfWork.Contacts.GetList(cancellationToken: cancellationToken);
 
-            return contactList.Select(contact => _mapper.Map<ContactDto>(contact));
+            return contactList.Select(contact => _mapper.Map<ContactDto>(contact)).Where(s=>s.UserId==_currentUserService.CurrentUser.Id);
         }
 
         public async Task<ContactDto?> GetById(int id, CancellationToken cancellationToken = default)

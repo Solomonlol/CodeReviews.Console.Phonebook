@@ -47,7 +47,7 @@ namespace Backend.Services
             {
                 var user = _mapper.Map<User>(item);
                 if(!string.IsNullOrEmpty(user.Email))
-                    user.EmailPasswordProtected = _emailPasswordProtection.Protect(user.Email);
+                    user.EmailPasswordProtected = _emailPasswordProtection.Protect(item.EmailPassword);
                 user.LoginPasswordHash = _passwordHasher.HashPassword(user, item.Password);
                 
                 await _unitOfWork.Users.Create(user, cancellationToken);

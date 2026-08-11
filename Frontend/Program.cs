@@ -39,8 +39,12 @@ using IHost host = Host.CreateDefaultBuilder(args)
         services.AddScoped<IMenu, UserManagementMenu>();
         services.AddScoped<IMenu, ContactManagementMenu>();
         services.AddScoped<IMenu, UserInterface>();
+        services.AddSingleton<CurrentUserService>();
+        services.AddDataProtection();
+        services.AddSingleton<EmailPasswordProtection>();
 
-        
+        services.Configure<SmtpSettings>(context.Configuration.GetSection("SmtpSettings"));
+        services.AddScoped<IMessage, EmailService>();
 
     }
     )
@@ -57,11 +61,11 @@ var emailService  = scope.ServiceProvider.GetService<EmailService>();
 var userMenu = scope.ServiceProvider.GetService<UserManagementMenu>();
 var contactMenu = scope.ServiceProvider.GetService<ContactManagementMenu>();
 var userInterface = scope.ServiceProvider.GetService<UserInterface>();
-var main = scope.ServiceProvider.GetService<MainMenu>();
+var mainMenu = scope.ServiceProvider.GetService<MainMenu>();
 
-var mainMenu = new UserInterface("Main menu");
-mainMenu.AddSubMenu("User menu", main);
-//mainMenu.AddSubMenu("Contact menu", contactMenu);
-mainMenu.AddExitItem("Exit app");
+//var mainMenu = new UserInterface("Main menu");
+//mainMenu.AddSubMenu("User menu", main);
+////mainMenu.AddSubMenu("Contact menu", contactMenu);
+//mainMenu.AddExitItem("Exit app");
 
 await mainMenu.RunAsync();
