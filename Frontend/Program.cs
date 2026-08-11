@@ -31,11 +31,16 @@ using IHost host = Host.CreateDefaultBuilder(args)
         services.AddScoped<EmailService>();
         services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 
-        services.AddTransient<UserMenu>();
-        //services.AddTransient<UserInterface>();
-        services.AddScoped<IMenu, UserMenu>();
-        services.AddScoped<IMenu, ContactMenu>();
+        services.AddTransient<UserManagementMenu>();
+        services.AddTransient<ContactManagementMenu>();
+        services.AddTransient<MainMenu>();
+        services.AddTransient<LogInMenu>();
+        services.AddTransient<EmailMenu>();
+        services.AddScoped<IMenu, UserManagementMenu>();
+        services.AddScoped<IMenu, ContactManagementMenu>();
         services.AddScoped<IMenu, UserInterface>();
+
+        
 
     }
     )
@@ -49,13 +54,14 @@ dbContext.Database.EnsureCreated();
 var userService = scope.ServiceProvider.GetService<UserService>();
 var contactService = scope.ServiceProvider.GetService<ContactService>();
 var emailService  = scope.ServiceProvider.GetService<EmailService>();
-var userMenu = scope.ServiceProvider.GetService<UserMenu>();
-var contactMenu = scope.ServiceProvider.GetService<ContactMenu>();
-var mainMenu = scope.ServiceProvider.GetService<UserInterface>();
+var userMenu = scope.ServiceProvider.GetService<UserManagementMenu>();
+var contactMenu = scope.ServiceProvider.GetService<ContactManagementMenu>();
+var userInterface = scope.ServiceProvider.GetService<UserInterface>();
+var main = scope.ServiceProvider.GetService<MainMenu>();
 
-var userInterface = new UserInterface("Main menu");
-userInterface.AddSubMenu("User menu", userMenu);
-userInterface.AddSubMenu("Contact menu", contactMenu);
-userInterface.AddExitItem("Exit");
+var mainMenu = new UserInterface("Main menu");
+mainMenu.AddSubMenu("User menu", main);
+//mainMenu.AddSubMenu("Contact menu", contactMenu);
+mainMenu.AddExitItem("Exit app");
 
-await userInterface.RunAsync();
+await mainMenu.RunAsync();

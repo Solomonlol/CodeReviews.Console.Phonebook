@@ -12,8 +12,16 @@ namespace Backend.Services
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IPasswordHasher<User> passwordHasher)
+        private readonly EmailPasswordProtection _emailPasswordProtection;
+        private readonly CurrentUserService _currentUserService;
+        public UserService(IUnitOfWork unitOfWork, 
+            IMapper mapper, 
+            IPasswordHasher<User> passwordHasher, 
+            CurrentUserService currentUserService,
+            EmailPasswordProtection emailPasswordProtection)
         {
+            _emailPasswordProtection = emailPasswordProtection;
+            _currentUserService = currentUserService;
             _passwordHasher = passwordHasher;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -39,7 +47,7 @@ namespace Backend.Services
             {
                 var user = _mapper.Map<User>(item);
                 if(!string.IsNullOrEmpty(user.Email))
-                    user.EmailPasswordHash = _passwordHasher.HashPassword(user, item.EmailPassword);
+                    user.EmailPasswordProtected = _emailPasswordProtection.Protect(user.Email);
                 user.LoginPasswordHash = _passwordHasher.HashPassword(user, item.Password);
                 
                 await _unitOfWork.Users.Create(user, cancellationToken);
@@ -57,21 +65,26 @@ namespace Backend.Services
             throw new InvalidOperationException("Use CreateAsync(CreateUserDto) instead");
         }
 
-        public async Task UpdateAsync(int id, UserDto dto, CancellationToken cancellationToken = default)
+        public async Task UpdateAsync(UserDto dto, CancellationToken cancellationToken = default)
         {
-            var user = await _unitOfWork.Users.Get(id, cancellationToken);
-
+            var user = await _unitOfWork.Users.GetByLogin(dto.Login, cancellationToken);
+            if (user == null)
+                throw new NotFoundException();
             _mapper.Map(dto, user);
 
             await _unitOfWork.Users.Update(user, cancellationToken);
             await _unitOfWork.SaveAsync(cancellationToken);
         }
+
         public async Task UpdateAsync(UserDto current, UserDto updated, CancellationToken cancellationToken = default)
         {
             var user = await _unitOfWork.Users.GetByLogin(current.Login);
             if (user == null)
                 throw new NotFoundException();
-            await UpdateAsync(user.Id, updated);
+            _mapper.Map(updated, user);
+
+            await _unitOfWork.Users.Update(user, cancellationToken);
+            await _unitOfWork.SaveAsync(cancellationToken);
         }
 
         public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
@@ -81,6 +94,15 @@ namespace Backend.Services
         }
         public async Task DeleteAsync(string login, string password, CancellationToken cancellationToken = default)
         {
+            var user = await LogIn(login, password, cancellationToken);
+            
+            await DeleteAsync(user.Id, cancellationToken);
+            _currentUserService.LogOut();
+            
+        }
+
+        public async Task<User> LogIn(string login, string password, CancellationToken cancellationToken = default)
+        {
             var user = await _unitOfWork.Users.GetByLogin(login, cancellationToken);
             if (user is null)
                 throw new NotFoundException("User not found");
@@ -89,8 +111,9 @@ namespace Backend.Services
 
             if (result == PasswordVerificationResult.Failed)
                 throw new ValidationException("Invalid password");
-
-            await DeleteAsync(user.Id, cancellationToken);
+            
+            _currentUserService.SetUser(user);
+            return user;
         }
     }
 }

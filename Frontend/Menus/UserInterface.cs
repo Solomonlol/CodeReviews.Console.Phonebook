@@ -1,4 +1,5 @@
 ﻿using Backend.Services;
+using Frontend.Entity;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,5 @@ namespace Frontend.Menus
                     await selected.SubMenu.RunAsync(cancellationToken);
             }
         }
-
-
     }
 }

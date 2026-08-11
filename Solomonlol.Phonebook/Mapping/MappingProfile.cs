@@ -14,7 +14,7 @@ namespace Backend.Mapping
             CreateMap<CreateUserDto, User>()
                 .ForMember(u => u.Id, d => d.Ignore())
                 .ForMember(u => u.LoginPasswordHash, d => d.Ignore())
-                .ForMember(u => u.EmailPasswordHash, d => d.Ignore())
+                .ForMember(u => u.EmailPasswordProtected, d => d.Ignore())
                 .ForMember(u => u.Contacts, d => d.Ignore())
                 .ForAllMembers(u => u.Condition((dto, user, member) =>
                                 member != null && 
@@ -23,7 +23,7 @@ namespace Backend.Mapping
             CreateMap<UserDto, User>()
                 .ForMember(u => u.Id, d => d.Ignore())
                 .ForMember(u => u.LoginPasswordHash, d => d.Ignore())
-                .ForMember(u => u.EmailPasswordHash, d => d.Ignore())
+                .ForMember(u => u.EmailPasswordProtected, d => d.Ignore())
                 .ForMember(u => u.Contacts, d => d.Ignore())
                 .ForAllMembers(u => u.Condition((dto, user, member) =>
                                 member != null &&

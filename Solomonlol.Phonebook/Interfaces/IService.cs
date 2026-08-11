@@ -12,7 +12,7 @@ namespace Backend.Interfaces
         Task<TDto?> GetById(int id, CancellationToken cancellationToken = default);
         Task<IEnumerable<TDto>> GetList(CancellationToken cancellationToken = default);
         Task CreateAsync(TDto item, CancellationToken cancellationToken = default);
-        Task UpdateAsync(int id, TDto dto, CancellationToken cancellationToken = default);
+        Task UpdateAsync(TDto dto, CancellationToken cancellationToken = default);
         Task DeleteAsync(int id, CancellationToken cancellationToken = default);
     }
 }

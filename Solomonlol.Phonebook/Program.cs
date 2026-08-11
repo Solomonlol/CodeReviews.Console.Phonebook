@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.DataProtection;
 
 using IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
@@ -28,6 +29,10 @@ using IHost host = Host.CreateDefaultBuilder(args)
         services.AddScoped<ContactService>();
         services.AddScoped<EmailService>();
         services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
+        services.AddDataProtection();
+        services.AddSingleton<EmailPasswordProtection>();
+
+        services.AddSingleton<CurrentUserService>();
     }
     )
     .Build();

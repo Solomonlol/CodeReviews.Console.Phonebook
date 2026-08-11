@@ -18,7 +18,7 @@ namespace Backend.Models
         public string? MiddleName { get; set; } = string.Empty;
         public string? LastName { get; set; } = string.Empty;
         public string? Email { get; set; } = string.Empty;
-        public string? EmailPasswordHash { get; set; } = string.Empty;
+        public string? EmailPasswordProtected { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(50)]

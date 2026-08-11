@@ -1,20 +1,22 @@
-﻿using Backend.Models.Dto;
+﻿using Backend.Exceptions;
+using Backend.Models.Dto;
 using Backend.Services;
-using Spectre.Console;
 using Backend.Validation;
-using Backend.Exceptions;
-using System.Reflection;
+using Spectre.Console;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Frontend.Menus
 {
-    internal class UserMenu : UserInterface
+    internal class ContactManagementMenu : UserInterface
     {
-        private readonly UserService _userService;
-        
-        public UserMenu(UserService service) : base("User menu")
+        private readonly ContactService _contactService;
+
+        public ContactManagementMenu(ContactService service) : base("Contact management")
         {
-            _userService = service;
-            AddItem("Create user", ()=> Create());
+            _contactService = service;
+            AddItem("Create user", () => Create());
             AddItem("Update user", () => Update());
             AddItem("Delete user", () => Delete());
             AddExitItem("Back");
@@ -24,14 +26,8 @@ namespace Frontend.Menus
         {
             try
             {
-                var dto = InUserCreation<CreateUserDto>(typeof(CreateUserDto).GetProperties().ToList());
-                if (!string.IsNullOrEmpty(dto.Email))
-                    while (string.IsNullOrEmpty(dto.EmailPassword))
-                        dto.EmailPassword = AnsiConsole.Prompt(
-                                        new TextPrompt<string>("Email password:")
-                                        .Secret('*'));
-
-                await _userService.CreateAsync(dto, cancellationToken);
+                var contact = InCreation.Creation<ContactDto>(propertyInputConfig);
+                await _contactService.CreateAsync(contact, cancellationToken);
             }
             catch (NotFoundException ex)
             {
@@ -51,56 +47,18 @@ namespace Frontend.Menus
         {
             try
             {
-                var userList = await _userService.GetList(cancellationToken);
-                if (userList.Any())
+                var contactList = await _contactService.GetList(cancellationToken);
+                if (contactList.Any())
                 {
-                    var userToDelete = await AnsiConsole.PromptAsync(new SelectionPrompt<string>()
-                                                    .Title($"Choose user [red]to delete:[/]")
-                                                    .AddChoices(userList.Select(u => u.Login)));
-
-                    var password = await AnsiConsole.AskAsync<string>("Enter user [green]password[/]");
-                    await _userService.DeleteAsync(userToDelete, password);
+                    var contactToDelete = await AnsiConsole.PromptAsync(new MultiSelectionPrompt<ContactDto>()
+                                                        .Title("Choose contact to [red]delete[/]:")
+                                                        .UseConverter(c => $"{c.FirstName} | {c.LastName} | {c.MiddleName} | {c.PhoneNumber} | {c.Email} | {c.Category}")
+                                                        .AddChoices(contactList));
+                    foreach (var item in contactToDelete)
+                    {
+                        await _contactService.DeleteAsync(item, cancellationToken);
+                    }
                 }
-                else throw new NotFoundException("[red]Not found any users[/]");
-            }
-            catch(NotFoundException ex)
-            {
-                AnsiConsole.MarkupLine($"[red]{ex.Message}[/]");
-            }
-            catch(ValidationException ex)
-            {
-                AnsiConsole.MarkupLine($"[red]{ex.Message}[/]");
-            }
-            catch (Exception ex)
-            {
-                AnsiConsole.MarkupLine($"[red]{ex.Message}[/]");
-            }
-        }
-
-        public async Task Update(CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                var list = await _userService.GetList(cancellationToken);
-                if (list.Any())
-                {
-                    var choise = await AnsiConsole.PromptAsync(new SelectionPrompt<string>()
-                                                    .Title($"Choose user to update")
-                                                    .AddChoices(list.Select(u => u.Login)));
-
-                    var currentUser = list.First(u => u.Login == choise);
-                    
-
-                    var choisesToUpdate = await AnsiConsole.PromptAsync(new MultiSelectionPrompt<PropertyInfo>()
-                                                            .Title("Choose what to update:")
-                                                            .UseConverter(p=>p.Name)
-                                                            .AddChoices(currentUser.GetType().GetProperties()));
-
-                    var updatedUser = InUserCreation<UserDto>(choisesToUpdate);
-
-                    await _userService.UpdateAsync(currentUser, updatedUser);
-                }
-                else throw new NotFoundException("Not found any records to update");
             }
             catch (NotFoundException ex)
             {
@@ -116,19 +74,38 @@ namespace Frontend.Menus
             }
         }
 
-        public T InUserCreation<T>(List<PropertyInfo> properties = null) where T : new()
+        public async Task Update(CancellationToken cancellationToken = default)
         {
-            T dto = new T();
-            if (properties == null)
+            try
             {
-                properties = typeof(T).GetProperties().ToList();
+                var contactList = await _contactService.GetList(cancellationToken);
+                if (contactList.Any())
+                {
+                    var contactToDelete = await AnsiConsole.PromptAsync(new SelectionPrompt<ContactDto>()
+                                                        .Title("Choose contact to [red]delete[/]:")
+                                                        .UseConverter(c => $"{c.FirstName} | {c.LastName} | {c.MiddleName} | {c.PhoneNumber} | {c.Email} | {c.Category}")
+                                                        .AddChoices(contactList));
+
+                    await _contactService.UpdateAsync(contactToDelete, cancellationToken);
+                }
             }
-            var propertyInputConfig = new Dictionary<string, Func<object>>
+            catch (NotFoundException ex)
             {
-                { nameof(CreateUserDto.Login), ()=> AnsiConsole.Ask<string>("Login:")},
-                { nameof(CreateUserDto.Password), ()=> AnsiConsole.Prompt(
-                                                        new TextPrompt<string>("Password:")
-                                                        .Secret('*'))},
+                AnsiConsole.MarkupLine($"[red]{ex.Message}[/]");
+            }
+            catch (ValidationException ex)
+            {
+                AnsiConsole.MarkupLine($"[red]{ex.Message}[/]");
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]{ex.Message}[/]");
+            }
+        }
+
+        private readonly Dictionary<string, Func<object>> propertyInputConfig = new Dictionary<string, Func<object>>
+            {
+                { nameof(ContactDto.Category), ()=> AnsiConsole.Ask<string>("Categoty:")},
                 { nameof(CreateUserDto.PhoneNumber), ()=> AnsiConsole.Prompt(
                                                         new TextPrompt<string>("Phone number in format: \n'+ xxx (xxx) xxx-xx-xx'\n+, -, spaces, brackets is not nessecery")
                                                         .Validate(input =>
@@ -158,17 +135,5 @@ namespace Frontend.Menus
                                         }
                                         )) }
             };
-
-            foreach(var property in properties)
-            {
-                if(propertyInputConfig.TryGetValue(property.Name, out var propFunc))
-                {
-                    var value = propFunc();
-                    property.SetValue(dto, value);
-                }
-            }
-            return dto;
-        }
-
     }
 }

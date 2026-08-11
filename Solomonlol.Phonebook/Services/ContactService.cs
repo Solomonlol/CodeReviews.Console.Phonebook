@@ -28,6 +28,13 @@ namespace Backend.Services
             await _unitOfWork.Contacts.Delete(id, cancellationToken);
             await _unitOfWork.SaveAsync(cancellationToken);
         }
+        public async Task DeleteAsync(ContactDto dto, CancellationToken cancellationToken = default)
+        {
+            var contact = await _unitOfWork.Contacts.GetByPhoneNumberAsync(dto.PhoneNumber);
+            if (contact != null)
+                await DeleteAsync(contact.Id, cancellationToken);
+            else throw new NotFoundException("Contact not exists");
+        }
 
         public async Task<IEnumerable<ContactDto>> GetList(CancellationToken cancellationToken = default)
         {
@@ -46,7 +53,7 @@ namespace Backend.Services
             return dto;
         }
 
-        public async Task UpdateAsync(int id, ContactDto dto, CancellationToken cancellationToken = default)
+        public async Task UpdateAsync(ContactDto dto, CancellationToken cancellationToken = default)
         {
             var contact = await _unitOfWork.Contacts.GetByPhoneNumberAsync(dto.PhoneNumber, cancellationToken);
             if (contact == null)

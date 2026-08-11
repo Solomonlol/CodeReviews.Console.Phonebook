@@ -1,4 +1,5 @@
 ﻿using Backend.Interfaces;
+using Backend.Models;
 using Backend.Models.Dto;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,16 @@ namespace Backend.Services
 {
     public class EmailService : IMessage
     {
-        public async Task SendMessageAsync(string header, string message, string password, UserDto sender, ContactDto receiver)
+        private readonly CurrentUserService _currentUserService;
+        private readonly EmailPasswordProtection _passwordProtection;
+        public EmailService(CurrentUserService currentUserService)
         {
+            _currentUserService = currentUserService;
+        }
+
+        public async Task SendMessageAsync(string header, string message, User sender, ContactDto receiver)
+        {
+            var password = _passwordProtection.Unprotect(sender.EmailPasswordProtected);
             var from = new MailAddress($"{sender.Email}", $"{sender.FirstName} {sender.LastName}");
             var to = new MailAddress($"{receiver.Email}");
             using var m = new MailMessage(from, to)
