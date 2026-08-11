@@ -40,10 +40,9 @@ namespace Frontend.Menus
                     var password = await AnsiConsole.AskAsync<string>("Enter user [green]password[/]");
 
                     var user = await _userService.LogIn(userToLogIn, password);
-                    //_currentUserService.SetUser(user);
                     await _logInMenu.RunAsync(cancellationToken);
-                    
                 }
+                else throw new NotFoundException("Not found any users");
             }
             catch (NotFoundException ex)
             {

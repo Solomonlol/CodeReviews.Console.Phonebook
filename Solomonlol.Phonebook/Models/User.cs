@@ -27,15 +27,5 @@ namespace Backend.Models
         public ICollection<Contact> Contacts { get; set; } = new List<Contact>();
 
         public User() { }
-
-        //public User(string login, string password, string firstName, string phoneNumber, string? lastName = "", string? email = "", int? emailPassword = null, string? middleName = "")
-        //{
-        //    Login = login;
-        //    FirstName = firstName;
-        //    MiddleName = middleName;
-        //    LastName = lastName;
-        //    Email = email;
-        //    PhoneNumber = phoneNumber;
-        //}
     }
 }

@@ -100,7 +100,7 @@ namespace Frontend.Menus
 
                     await _userService.UpdateAsync(currentUser, updatedUser);
                 }
-                else throw new NotFoundException("Not found any records to update");
+                else throw new NotFoundException("Not found any users");
             }
             catch (NotFoundException ex)
             {

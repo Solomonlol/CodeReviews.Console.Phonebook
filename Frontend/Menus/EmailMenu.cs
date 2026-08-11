@@ -1,4 +1,5 @@
-﻿using Backend.Models.Dto;
+﻿using Backend.Exceptions;
+using Backend.Models.Dto;
 using Backend.Services;
 using Spectre.Console;
 using System;
@@ -24,16 +25,35 @@ namespace Frontend.Menus
 
         public async Task Send()
         {
-            var contactList = (await _contactService.GetList()).ToList();
-            var contactChoise = await AnsiConsole.PromptAsync(new MultiSelectionPrompt<ContactDto>()
-                                                        .Title("Choose who to send the message to:")
-                                                        .UseConverter(c => $"{c.FirstName}\t| {c.LastName}\t| {c.MiddleName}\t| {c.PhoneNumber}\t| {c.Email}\t | {c.Category}")
-                                                        .AddChoices(contactList));
-            var header = await AnsiConsole.AskAsync<string>("Enter [green]header[/]:");
-            var message = await AnsiConsole.AskAsync<string>("Enter your [green]message[/]");
-            foreach (var con in contactChoise)
+            try
             {
-                await _emailService.SendMessageAsync(header, message, _currentUserService.CurrentUser, con);
+                var contactList = (await _contactService.GetList()).ToList();
+                if (contactList.Any())
+                {
+                    var contactChoise = await AnsiConsole.PromptAsync(new MultiSelectionPrompt<ContactDto>()
+                                                                .Title("Choose who to send the message to:")
+                                                                .UseConverter(c => $"{c.FirstName}\t| {c.LastName}\t| {c.MiddleName}\t| {c.PhoneNumber}\t| {c.Email}\t | {c.Category}")
+                                                                .AddChoices(contactList));
+                    var header = await AnsiConsole.AskAsync<string>("Enter [green]header[/]:");
+                    var message = await AnsiConsole.AskAsync<string>("Enter your [green]message[/]");
+                    foreach (var con in contactChoise)
+                    {
+                        await _emailService.SendMessageAsync(header, message, _currentUserService.CurrentUser, con);
+                    }
+                }
+                else throw new NotFoundException("Not found any contacts");
+            }
+            catch (NotFoundException ex)
+            {
+                AnsiConsole.MarkupLine($"[red]{ex.Message}[/]");
+            }
+            catch (ValidationException ex)
+            {
+                AnsiConsole.MarkupLine($"[red]{ex.Message}[/]");
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]{ex.Message}[/]");
             }
         }
     }
