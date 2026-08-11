@@ -24,7 +24,7 @@ namespace Backend.Services
         public async Task SendMessageAsync(string header, string message, User sender, ContactDto receiver)
         {
             var password = _passwordProtection.Unprotect(sender.EmailPasswordProtected);
-            Console.WriteLine($"Password:{password}");
+            
             var from = new MailAddress($"{sender.Email}", $"{sender.FirstName} {sender.LastName}");
             var to = new MailAddress($"{receiver.Email}");
             using var m = new MailMessage(from, to)
