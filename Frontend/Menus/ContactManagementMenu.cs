@@ -60,6 +60,7 @@ namespace Frontend.Menus
                         await _contactService.DeleteAsync(item, cancellationToken);
                     }
                 }
+                else throw new NotFoundException("Not found any contacts");
             }
             catch (NotFoundException ex)
             {
@@ -89,6 +90,7 @@ namespace Frontend.Menus
 
                     await _contactService.UpdateAsync(contactToDelete, cancellationToken);
                 }
+                else throw new NotFoundException("Not found any contacts");
             }
             catch (NotFoundException ex)
             {
