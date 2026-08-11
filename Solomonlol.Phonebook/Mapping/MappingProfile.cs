@@ -17,7 +17,8 @@ namespace Backend.Mapping
                 .ForMember(u => u.EmailPasswordHash, d => d.Ignore())
                 .ForMember(u => u.Contacts, d => d.Ignore())
                 .ForAllMembers(u => u.Condition((dto, user, member) =>
-                                member != null && !member.Equals(default)));
+                                member != null && 
+                                !(member is string s && string.IsNullOrEmpty(s))));
 
             CreateMap<UserDto, User>()
                 .ForMember(u => u.Id, d => d.Ignore())
@@ -25,7 +26,8 @@ namespace Backend.Mapping
                 .ForMember(u => u.EmailPasswordHash, d => d.Ignore())
                 .ForMember(u => u.Contacts, d => d.Ignore())
                 .ForAllMembers(u => u.Condition((dto, user, member) =>
-                                member != null && !member.Equals(default)));
+                                member != null &&
+                                !(member is string s && string.IsNullOrEmpty(s))));
 
             CreateMap<Contact, ContactDto>();
             CreateMap<ContactDto, Contact>()
@@ -33,7 +35,8 @@ namespace Backend.Mapping
                 .ForMember(c => c.UserId, d => d.Ignore())
                 .ForMember(c => c.User, d => d.Ignore())
                 .ForAllMembers(u => u.Condition((dto, user, member) =>
-                                member != null && !member.Equals(default)));
+                                member != null &&
+                                !(member is string s && string.IsNullOrEmpty(s))));
 
         }
     }

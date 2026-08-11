@@ -93,6 +93,7 @@ namespace Frontend.Menus
 
                     var choisesToUpdate = await AnsiConsole.PromptAsync(new MultiSelectionPrompt<PropertyInfo>()
                                                             .Title("Choose what to update:")
+                                                            .UseConverter(p=>p.Name)
                                                             .AddChoices(currentUser.GetType().GetProperties()));
 
                     var updatedUser = InUserCreation<UserDto>(choisesToUpdate);
@@ -117,8 +118,6 @@ namespace Frontend.Menus
 
         public T InUserCreation<T>(List<PropertyInfo> properties = null) where T : new()
         {
-            //CreateUserDto dto = new CreateUserDto();
-            //var dto = typeof(dtoObject);
             T dto = new T();
             if (properties == null)
             {
@@ -167,10 +166,7 @@ namespace Frontend.Menus
                     var value = propFunc();
                     property.SetValue(dto, value);
                 }
-                   
             }
-
-
             return dto;
         }
 

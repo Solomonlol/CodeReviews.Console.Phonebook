@@ -1,6 +1,7 @@
 ﻿using Backend.Models.Dto;
 using System;
 using System.Collections.Generic;
+using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -19,14 +20,15 @@ namespace Backend.Validation
         }
         public static bool IsEmailAddress(string email)
         {
-            var pattern = @"^(?("")(""[^""]+?""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
-                @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,17}))$";
+            if(string.IsNullOrWhiteSpace(email))
+                return false;
 
-            if (Regex.IsMatch(email, pattern))
+            try
             {
-                return true;
+                var address = new MailAddress(email);
+                return address.Address == email;
             }
-            else return false;
+            catch { return false; }
         }
     }   
 
