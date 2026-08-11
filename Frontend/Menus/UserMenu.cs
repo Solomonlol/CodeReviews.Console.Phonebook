@@ -24,42 +24,6 @@ namespace Frontend.Menus
         {
             try
             {
-                //CreateUserDto dto = new CreateUserDto
-                //{
-                //    Login = AnsiConsole.Ask<string>("Login:"),
-                //    Password = AnsiConsole.Prompt(
-                //                        new TextPrompt<string>("Password:")
-                //                        .Secret('*')),
-                //    PhoneNumber = AnsiConsole.Prompt(
-                //                        new TextPrompt<string>("Phone number in format: \n'+ xxx (xxx) xxx-xx-xx'\n+, -, spaces, brackets is not nessecery")
-                //                        .Validate(input =>
-                //                        {
-                //                            return Validation.IsPhoneNumber(input)
-                //                            ? ValidationResult.Success()
-                //                            : ValidationResult.Error("[red]Invalid input[/]");
-                //                        })),
-                //    FirstName = AnsiConsole.Ask<string>("First name:"),
-                //    LastName = AnsiConsole.Prompt(
-                //                        new TextPrompt<string>("Last name (optional):")
-                //                        .AllowEmpty()),
-                //    MiddleName = AnsiConsole.Prompt(
-                //                        new TextPrompt<string>("Middle name (optional):")
-                //                        .AllowEmpty()),
-
-                //    Email = AnsiConsole.Prompt(
-                //                        new TextPrompt<string>("Email (optional):")
-                //                        .AllowEmpty()
-                //                        .Validate(input =>
-                //                        {
-                //                            if (string.IsNullOrEmpty(input))
-                //                                return ValidationResult.Success();
-
-                //                            return Validation.IsEmailAddress(input)
-                //                            ? ValidationResult.Success()
-                //                            : ValidationResult.Error("[red]Invalid input[/]");
-                //                        }
-                //    ))
-                //};
                 var dto = InUserCreation<CreateUserDto>(typeof(CreateUserDto).GetProperties().ToList());
                 if (!string.IsNullOrEmpty(dto.Email))
                     while (string.IsNullOrEmpty(dto.EmailPassword))
@@ -124,15 +88,16 @@ namespace Frontend.Menus
                                                     .Title($"Choose user to update")
                                                     .AddChoices(list.Select(u => u.Login)));
 
-                    var user = list.First(u => u.Login == choise);
+                    var currentUser = list.First(u => u.Login == choise);
+                    
 
                     var choisesToUpdate = await AnsiConsole.PromptAsync(new MultiSelectionPrompt<PropertyInfo>()
                                                             .Title("Choose what to update:")
-                                                            .AddChoices(user.GetType().GetProperties()));
+                                                            .AddChoices(currentUser.GetType().GetProperties()));
 
-                    user = InUserCreation<UserDto>(choisesToUpdate);
+                    var updatedUser = InUserCreation<UserDto>(choisesToUpdate);
 
-                    await _userService.UpdateAsync(user);
+                    await _userService.UpdateAsync(currentUser, updatedUser);
                 }
                 else throw new NotFoundException("Not found any records to update");
             }

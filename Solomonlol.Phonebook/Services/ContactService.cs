@@ -48,7 +48,7 @@ namespace Backend.Services
 
         public async Task UpdateAsync(int id, ContactDto dto, CancellationToken cancellationToken = default)
         {
-            var contact = await _unitOfWork.Contacts.Get(id, cancellationToken);
+            var contact = await _unitOfWork.Contacts.GetByPhoneNumberAsync(dto.PhoneNumber, cancellationToken);
             if (contact == null)
             {
                 throw new NotFoundException($"Contact was not found");

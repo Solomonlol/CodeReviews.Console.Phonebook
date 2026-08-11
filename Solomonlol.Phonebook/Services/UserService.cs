@@ -60,13 +60,18 @@ namespace Backend.Services
         public async Task UpdateAsync(int id, UserDto dto, CancellationToken cancellationToken = default)
         {
             var user = await _unitOfWork.Users.Get(id, cancellationToken);
-            if (user == null)
-                throw new NotFoundException();
 
             _mapper.Map(dto, user);
 
             await _unitOfWork.Users.Update(user, cancellationToken);
             await _unitOfWork.SaveAsync(cancellationToken);
+        }
+        public async Task UpdateAsync(UserDto current, UserDto updated, CancellationToken cancellationToken = default)
+        {
+            var user = await _unitOfWork.Users.GetByLogin(current.Login);
+            if (user == null)
+                throw new NotFoundException();
+            await UpdateAsync(user.Id, updated);
         }
 
         public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
