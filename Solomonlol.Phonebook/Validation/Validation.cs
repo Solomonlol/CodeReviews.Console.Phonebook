@@ -7,7 +7,7 @@ namespace Backend.Validation
     {
         public static bool IsPhoneNumber(string number)
         {
-            var pattern = @"^\+?(\(\d{1,4}\)[\s]?|\d{1,4}[\s]?)?(\(\d{1,4}\)[\s]?|\d{1,4}[\s]?)?(\d{3}\-\d{2}\-\d{2}|\d{3}\-\d{4}|\d{7})$"; 
+            var pattern = @"^\+?(\(\d{1,4}\)[\s]?|\d{1,4}[\s]?)?(\(\d{1,4}\)[\s]?|\d{1,4}[\s]?)?(\d{3}\-\d{2}\-\d{2}|\d{3}[\s]\d{2}[\s]\d{2}|\d{3}\-\d{4}|\d{7})$"; 
             if (Regex.IsMatch(number, pattern))
             {
                 return true;
@@ -22,7 +22,8 @@ namespace Backend.Validation
             try
             {
                 var address = new MailAddress(email);
-                return address.Address == email;
+                var toCheck = address.Host.Split('.');
+                return toCheck.Length >= 2 && toCheck.All(p => !string.IsNullOrEmpty(p));
             }
             catch { return false; }
         }
