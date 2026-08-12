@@ -41,6 +41,6 @@ using (var scope = host.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
 
-    dbContext.Database.EnsureCreated();
-    //await dbContext.Database.MigrateAsync();
+    //dbContext.Database.EnsureCreated();
+    await dbContext.Database.MigrateAsync();
 }
