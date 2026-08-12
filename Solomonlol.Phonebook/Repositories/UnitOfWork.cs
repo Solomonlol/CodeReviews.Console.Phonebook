@@ -1,5 +1,4 @@
 ﻿using Backend.Interfaces;
-using Backend.Models;
 
 namespace Backend.Repositories
 {

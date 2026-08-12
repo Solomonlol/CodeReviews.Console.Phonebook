@@ -1,7 +1,5 @@
 ﻿using Backend.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.IO;
 
 namespace Backend
 {

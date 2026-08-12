@@ -3,9 +3,6 @@ using Backend.Models.Dto;
 using Backend.Services;
 using Backend.Validation;
 using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Frontend.Menus
 {
@@ -24,6 +21,7 @@ namespace Frontend.Menus
 
         public async Task Create(CancellationToken cancellationToken = default)
         {
+            Console.Clear();
             try
             {
                 var contact = InCreation.Creation<ContactDto>(propertyInputConfig);
@@ -46,6 +44,7 @@ namespace Frontend.Menus
 
         public async Task Delete(CancellationToken cancellationToken = default)
         {
+            Console.Clear();
             try
             {
                 var contactList = await _contactService.GetList(cancellationToken);
@@ -78,6 +77,7 @@ namespace Frontend.Menus
 
         public async Task Update(CancellationToken cancellationToken = default)
         {
+            Console.Clear();
             try
             {
                 var contactList = await _contactService.GetList(cancellationToken);

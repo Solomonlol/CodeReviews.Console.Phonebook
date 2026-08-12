@@ -63,9 +63,4 @@ var contactMenu = scope.ServiceProvider.GetService<ContactManagementMenu>();
 var userInterface = scope.ServiceProvider.GetService<UserInterface>();
 var mainMenu = scope.ServiceProvider.GetService<MainMenu>();
 
-//var mainMenu = new UserInterface("Main menu");
-//mainMenu.AddSubMenu("User menu", main);
-////mainMenu.AddSubMenu("Contact menu", contactMenu);
-//mainMenu.AddExitItem("Exit app");
-
 await mainMenu.RunAsync();

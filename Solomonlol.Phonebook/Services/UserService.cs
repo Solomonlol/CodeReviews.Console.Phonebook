@@ -76,12 +76,30 @@ namespace Backend.Services
             await _unitOfWork.SaveAsync(cancellationToken);
         }
 
+        public async Task UpdateAsync(string login, CreateUserDto dtoToUpdate, CancellationToken cancellationToken = default)
+        {
+            var user = await _unitOfWork.Users.GetByLogin(login, cancellationToken);
+            if (user == null)
+                throw new NotFoundException();
+
+            _mapper.Map(dtoToUpdate, user);
+
+            if (!string.IsNullOrEmpty(dtoToUpdate.Password))
+                user.LoginPasswordHash = _passwordHasher.HashPassword(user, dtoToUpdate.Password);
+            if (!string.IsNullOrEmpty(dtoToUpdate.EmailPassword))
+                user.EmailPasswordProtected = _emailPasswordProtection.Protect(dtoToUpdate.EmailPassword);
+
+            await _unitOfWork.Users.Update(user, cancellationToken);
+            await _unitOfWork.SaveAsync(cancellationToken);
+            _currentUserService.LogOut();
+        }
+
         public async Task UpdateAsync(UserDto current, UserDto updated, CancellationToken cancellationToken = default)
         {
             var user = await _unitOfWork.Users.GetByLogin(current.Login);
             if (user == null)
                 throw new NotFoundException();
-            _mapper.Map(updated, user);
+            _mapper.Map<User>(updated);
 
             await _unitOfWork.Users.Update(user, cancellationToken);
             await _unitOfWork.SaveAsync(cancellationToken);

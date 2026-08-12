@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Backend.Exceptions
+﻿namespace Backend.Exceptions
 {
     public class NotFoundException : Exception
     {

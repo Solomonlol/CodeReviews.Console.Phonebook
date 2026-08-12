@@ -22,6 +22,7 @@ namespace Frontend.Menus
 
         public async Task Create(CancellationToken cancellationToken = default)
         {
+            Console.Clear();
             try
             {
                 var dto = InCreation.Creation<CreateUserDto>(propertyInputConfig, typeof(CreateUserDto).GetProperties().ToList());
@@ -49,6 +50,7 @@ namespace Frontend.Menus
 
         public async Task Delete(CancellationToken cancellationToken = default)
         {
+            Console.Clear();
             try
             {
                 var userList = await _userService.GetList(cancellationToken);
@@ -58,7 +60,9 @@ namespace Frontend.Menus
                                                     .Title($"Choose user [red]to delete:[/]")
                                                     .AddChoices(userList.Select(u => u.Login)));
 
-                    var password = await AnsiConsole.AskAsync<string>("Enter user [green]password[/]");
+                    var password = await AnsiConsole.PromptAsync(
+                                                    new TextPrompt<string>("Enter user [green]password[/]")
+                                                    .Secret('*'));
                     await _userService.DeleteAsync(userToDelete, password);
                 }
                 else throw new NotFoundException("[red]Not found any users[/]");
@@ -79,6 +83,7 @@ namespace Frontend.Menus
 
         public async Task Update(CancellationToken cancellationToken = default)
         {
+            Console.Clear();
             try
             {
                 var list = await _userService.GetList(cancellationToken);
@@ -88,17 +93,25 @@ namespace Frontend.Menus
                                                     .Title($"Choose user to update")
                                                     .AddChoices(list.Select(u => u.Login)));
 
-                    var currentUser = list.First(u => u.Login == choise);
                     
+                    var password = await AnsiConsole.PromptAsync(
+                                                    new TextPrompt<string>("Enter user [green]password[/]")
+                                                    .Secret('*'));
+
+                    await _userService.LogIn(choise, password);
+
+                    var currentUser = list.First(u => u.Login == choise);
+                    var passwordProperties = typeof(CreateUserDto).GetProperties().ToList();
 
                     var choisesToUpdate = await AnsiConsole.PromptAsync(new MultiSelectionPrompt<PropertyInfo>()
                                                             .Title("Choose what to update:")
-                                                            .UseConverter(p=>p.Name)
-                                                            .AddChoices(currentUser.GetType().GetProperties()));
+                                                            .UseConverter(p => p.Name)
+                                                            .AddChoices(passwordProperties));
 
-                    var updatedUser = InCreation.Creation<UserDto>(propertyInputConfig, choisesToUpdate);
+                    AnsiConsole.MarkupLine("[green]Enter chosen properties new values:[/]");
+                    var updatedUser = InCreation.Creation<CreateUserDto>(propertyInputConfig, choisesToUpdate);
 
-                    await _userService.UpdateAsync(currentUser, updatedUser);
+                    await _userService.UpdateAsync(currentUser.Login, updatedUser);
                 }
                 else throw new NotFoundException("Not found any users");
             }

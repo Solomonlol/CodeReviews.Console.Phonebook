@@ -1,8 +1,5 @@
 ﻿using Backend.Models;
 using Backend.Models.Dto;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Backend.Interfaces
 {

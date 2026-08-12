@@ -2,9 +2,6 @@
 using Backend.Models.Dto;
 using Backend.Services;
 using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Frontend.Menus
 {
@@ -25,6 +22,7 @@ namespace Frontend.Menus
 
         public async Task Send()
         {
+            Console.Clear();
             try
             {
                 var contactList = (await _contactService.GetList()).ToList();

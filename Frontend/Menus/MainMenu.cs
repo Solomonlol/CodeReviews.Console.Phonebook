@@ -1,9 +1,6 @@
 ﻿using Backend.Exceptions;
 using Backend.Services;
 using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Frontend.Menus
 {
@@ -28,6 +25,7 @@ namespace Frontend.Menus
 
         public async Task LogIn(CancellationToken cancellationToken = default)
         {
+            Console.Clear();
             try
             {
                 var loginList = await _userService.GetList();
@@ -39,7 +37,7 @@ namespace Frontend.Menus
 
                     var password = await AnsiConsole.AskAsync<string>("Enter user [green]password[/]");
 
-                    var user = await _userService.LogIn(userToLogIn, password);
+                    await _userService.LogIn(userToLogIn, password);
                     await _logInMenu.RunAsync(cancellationToken);
                 }
                 else throw new NotFoundException("Not found any users");

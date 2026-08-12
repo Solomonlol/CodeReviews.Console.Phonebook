@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Frontend.Entity
+﻿namespace Frontend.Entity
 {
     internal class MenuItem
     {

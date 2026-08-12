@@ -2,11 +2,8 @@
 using Backend.Models;
 using Backend.Models.Dto;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
 
 namespace Backend.Services
 {

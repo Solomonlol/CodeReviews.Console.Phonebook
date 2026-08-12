@@ -1,9 +1,5 @@
-﻿using Backend.Services;
-using Frontend.Entity;
+﻿using Frontend.Entity;
 using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Frontend.Menus
 {
@@ -27,6 +23,7 @@ namespace Frontend.Menus
 
         public async  Task RunAsync(CancellationToken cancellationToken = default)
         {
+            Console.Clear();
             _exit = false;
             while(!_exit)
             {

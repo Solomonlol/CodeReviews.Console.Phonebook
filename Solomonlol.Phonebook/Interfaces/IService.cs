@@ -1,11 +1,4 @@
-﻿using Backend.Models.Dto;
-using Backend.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
-
-namespace Backend.Interfaces
+﻿namespace Backend.Interfaces
 {
     public interface IService<T, TDto> where T : class where TDto : class
     {
