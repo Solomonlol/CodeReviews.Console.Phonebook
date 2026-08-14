@@ -69,11 +69,11 @@ if (!db.Users.Any())
 {
     var users = new List<User>
     {
-        new() { Login = "ivanov",  FirstName = "Иван",   LastName = "Иванов",  MiddleName = "Петрович",      Email = "ivanov@mail.ru",   PhoneNumber = "+79001112233" },
-        new() { Login = "petrova", FirstName = "Анна",   LastName = "Петрова", MiddleName = "Сергеевна",     Email = "petrova@gmail.com", PhoneNumber = "+79002223344" },
-        new() { Login = "sidorov", FirstName = "Алексей",LastName = "Сидоров", MiddleName = null,            Email = "sidorov@yandex.ru", PhoneNumber = "+79003334455" },
-        new() { Login = "smirnova",FirstName = "Мария",  LastName = "Смирнова",MiddleName = "Игоревна",      Email = "smirnova@mail.ru",  PhoneNumber = "+79004445566" },
-        new() { Login = "kozlov",  FirstName = "Дмитрий",LastName = "Козлов",  MiddleName = "Александрович", Email = "kozlov@gmail.com",  PhoneNumber = "+79005556677" },
+        new() { Login = "ivanov",  FirstName = "Ivan",   LastName = "Ivanov",  MiddleName = "Petrovich",      Email = "ivanov@mail.ru",   PhoneNumber = "+79001112233" },
+        new() { Login = "petrova", FirstName = "Anna",   LastName = "Petrova", MiddleName = "Sergeevna",     Email = "petrova@gmail.com", PhoneNumber = "+79002223344" },
+        new() { Login = "sidorov", FirstName = "Aleksey",LastName = "Sidorov", MiddleName = null,            Email = "sidorov@yandex.ru", PhoneNumber = "+79003334455" },
+        new() { Login = "smirnova",FirstName = "Mary",  LastName = "Smirnova",MiddleName = "Igorevna",      Email = "smirnova@mail.ru",  PhoneNumber = "+79004445566" },
+        new() { Login = "kozlov",  FirstName = "Dmitry",LastName = "Kozlov",  MiddleName = "Alexanrovich", Email = "kozlov@gmail.com",  PhoneNumber = "+79005556677" },
     };
 
     foreach (var user in users)
@@ -88,9 +88,9 @@ if (!db.Users.Any())
     var contacts = new List<Contact>();
     int contactId = 1;
 
-    string[] firstNames = { "Сергей", "Елена", "Павел", "Ольга", "Андрей" };
-    string[] lastNames = { "Волков", "Морозова", "Новиков", "Фёдорова", "Соколов" };
-    string[] categories = { "Друзья", "Работа", "Семья", "Друзья", "Работа" };
+    string[] firstNames = { "Sergey", "Elena", "Pavel", "Olga", "Andrey" };
+    string[] lastNames = { "Volkov", "Morozova", "Novikov", "Fedorova", "Sokolov" };
+    string[] categories = { "Friends", "Work", "Family", "Friends", "Work" };
 
     foreach (var user in users)
     {
@@ -102,7 +102,7 @@ if (!db.Users.Any())
                 FirstName = firstNames[i],
                 LastName = lastNames[i],
                 PhoneNumber = $"+790{user.Id}000{i + 1}{i + 1}{i + 1}{i + 1}",
-                Email = $"{firstNames[i].ToLower()}{user.Id}@mail.ru",
+                Email = $"{firstNames[i].ToLower()}{user.Id}@gmail.com",
                 Category = categories[i]
             });
         }
