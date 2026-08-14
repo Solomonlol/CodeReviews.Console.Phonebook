@@ -1,6 +1,7 @@
 This is .Net 10 app that allows user to create, delete and update records of contacts. Each contact include nessecery parameters like Login, First Name, phonenumber and optional parameters like Email, Last Name, Middle Name and Category.
 
 When user open the app, if there is no records in database exist, app will create few records. Then user can see Main menu
+
 <img width="345" height="178" alt="image" src="https://github.com/user-attachments/assets/3ff2a15c-58b9-4d60-9d25-02c60df8f0e8" />
 
 Exit application just close the app. 
