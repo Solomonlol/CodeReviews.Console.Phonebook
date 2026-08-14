@@ -8,6 +8,7 @@ Exit application just close the app.
 1. User management:
 
 It's a menu where user can create, update and delete user record 
+
 <img width="295" height="189" alt="image" src="https://github.com/user-attachments/assets/804a8b40-aae5-4028-8c6a-4d3a8777d2fc" />
 
 To create user you need enter your data
