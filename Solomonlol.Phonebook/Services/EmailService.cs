@@ -39,7 +39,7 @@ namespace Backend.Services
             };
 
             await smtp.SendMailAsync(m);
-            Console.WriteLine("Письмо отправлено");
+            Console.WriteLine("The email has been successfully sent.");
         }
     }
 }

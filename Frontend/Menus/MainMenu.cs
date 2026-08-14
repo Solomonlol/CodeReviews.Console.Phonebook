@@ -20,7 +20,7 @@ namespace Frontend.Menus
             _logInMenu = logInMenu;
             AddItem("Log In", () => LogIn());
             AddItem("User management", () => UserManagement());
-            AddExitItem("Back");
+            AddExitItem("Exit application");
         }
 
         public async Task LogIn(CancellationToken cancellationToken = default)

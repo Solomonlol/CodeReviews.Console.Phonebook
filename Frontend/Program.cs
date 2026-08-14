@@ -52,11 +52,10 @@ using IHost host = Host.CreateDefaultBuilder(args)
 
 using var scope = host.Services.CreateScope();
 
-var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+
 var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
 var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<User>>();
-//dbContext.Database.EnsureCreated();
-await dbContext.Database.MigrateAsync();
+await db.Database.MigrateAsync();
 
 var userService = scope.ServiceProvider.GetService<UserService>();
 var contactService = scope.ServiceProvider.GetService<ContactService>();
