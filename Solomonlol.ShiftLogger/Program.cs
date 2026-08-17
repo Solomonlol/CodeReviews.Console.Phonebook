@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using ShiftLogger.Backend.Endpoints;
 using ShiftLogger.Backend.Entities;
 using ShiftLogger.Backend.Interfaces;
 using ShiftLogger.Backend.Services;
@@ -19,15 +20,13 @@ builder.Services.AddScoped<IDbService<Shift>, ShiftService>();
 
 var app = builder.Build();
 
-var ct = new CancellationToken();
 
 if(app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
-app.MapGet("/useritems", async (UserService db)=>
-await db.GetAll(ct));
-
+app.MapUserEndpoints();
+app.MapShiftEndpoints();
 
 await app.RunAsync();

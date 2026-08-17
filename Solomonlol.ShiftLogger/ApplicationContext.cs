@@ -18,6 +18,10 @@ namespace Solomonlol.ShiftLogger
                 .WithMany(s=>s.Shifts)
                 .HasForeignKey(s=>s.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.UserIdentificationNumber)
+                .IsUnique();
         }
     }
 }
