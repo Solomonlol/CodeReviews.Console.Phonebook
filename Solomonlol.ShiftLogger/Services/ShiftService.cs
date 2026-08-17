@@ -6,7 +6,7 @@ using Solomonlol.ShiftLogger;
 
 namespace ShiftLogger.Backend.Services
 {
-    public class ShiftService : IDbService<Shift>
+    public class ShiftService : IShiftService
     {
         private readonly ApplicationContext _context;
         public ShiftService(ApplicationContext context)

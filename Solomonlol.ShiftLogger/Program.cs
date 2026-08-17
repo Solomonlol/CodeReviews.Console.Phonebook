@@ -12,8 +12,8 @@ var connectionString = builder.Configuration.GetConnectionString("SQLServerConne
 builder.Services.AddDbContext<ApplicationContext>(options =>
                     options.UseSqlServer(connectionString));
 builder.Services.AddOpenApi();
-builder.Services.AddScoped<IDbService<User>, UserService>();
-builder.Services.AddScoped<IDbService<Shift>, ShiftService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IShiftService, ShiftService>();
 
 
 

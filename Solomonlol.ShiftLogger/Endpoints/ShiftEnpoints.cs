@@ -7,7 +7,7 @@ namespace ShiftLogger.Backend.Endpoints
     {
         public static void MapShiftEndpoints(this WebApplication app)
         {
-            app.MapGet("/api/shifts", async (IDbService<Shift> db, CancellationToken ct) =>
+            app.MapGet("/api/shifts", async (IShiftService db, CancellationToken ct) =>
             {
                 return await db.GetAll(ct);
             });

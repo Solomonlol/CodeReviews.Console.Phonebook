@@ -8,9 +8,13 @@ POST {{Solomonlol.ShiftLogger_HostAddress}}/api/users
 Content-Type: application/json
 {
   "FirstName": "Bruse",
-  "LastName": "Lee"
+  "LastName": "Lee",
+  "UserIdentificationNumber": "2"
 }
 
 ###
 GET {{Solomonlol.ShiftLogger_HostAddress}}/api/users/4
 Accept: application/json
+
+###
+DELETE {{Solomonlol.ShiftLogger_HostAddress}}/api/users/4

@@ -17,8 +17,8 @@ namespace ShiftLogger.Backend.Entities
         [StringLength(50)]
         public string LastName { get; set; }
 
-        [Required(ErrorMessage ="User Identification number not specified")]
-        [Range(1, 999999)]
+        
+        [Range(1, 999999, ErrorMessage ="User identification number should be on 1-999999 range")]
         public int UserIdentificationNumber { get; set; }
 
         [JsonIgnore]
