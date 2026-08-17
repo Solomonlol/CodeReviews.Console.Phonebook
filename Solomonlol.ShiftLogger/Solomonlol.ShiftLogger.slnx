@@ -1,4 +1,0 @@
-<Solution>
-  <Project Path="../ShiftLogger.Frontend/ShiftLogger.Frontend.csproj" Id="00edcb28-2d28-4574-b822-ccfa034a9fdd" />
-  <Project Path="ShiftLogger.Backend.csproj" />
-</Solution>
