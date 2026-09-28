@@ -1,4 +1,4 @@
-﻿using Backend;
+using Backend;
 using Backend.Interfaces;
 using Backend.Repositories;
 using Backend.Services;
@@ -55,7 +55,27 @@ using var scope = host.Services.CreateScope();
 
 var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
 var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<User>>();
-await db.Database.MigrateAsync();
+
+
+int maxRetries = 5;
+for (int i = 0; i < maxRetries; i++)
+{
+    try
+    {
+        
+        await db.Database.EnsureCreatedAsync();
+        break;
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Database initialization attempt {i + 1}/{maxRetries} failed: {ex.Message}");
+        if (i < maxRetries - 1)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(2));
+        }
+        else throw;
+    }
+}
 
 var userService = scope.ServiceProvider.GetService<UserService>();
 var contactService = scope.ServiceProvider.GetService<ContactService>();
