@@ -2,27 +2,73 @@
 
 ## Prerequisites
 
-1).NET 10 SDK
 
-2)PostgreSQL running locally (or reachable) on port 5432 (default setting, can be changed)
-
-3)(Optional, for the email feature) a Gmail account with a Google App Password
+1)(Optional, for the email feature) a Gmail account with a Google App Password
 
 
 ## Steps
 
-### 1.Clone the repository and open the solution (Solomonlol.Phonebook.slnx).
-### 2.Update the connection string in Solomonlol.Phonebook/appsettings.json if your PostgreSQL credentials differ from the default:
-   "PostgresConnection": "Host=localhost;Port=5432;Username=postgres;Database=PhonebookDB"
+## Run with Docker
 
-### 3.Run the Frontend project — this is the console app the user interacts with:
+The easiest way to run Phonebook: you only need Docker, no .NET SDK and no local PostgreSQL.
 
-   cd Frontend
-   
-   dotnet run
+### Prerequisites
 
-On first launch, EF Core migrations are applied automatically (db.Database.MigrateAsync()), creating the database and tables if they don't exist yet. 
-### 4. If the Users table is empty, the app seeds five demo users (with contacts) automatically. The default password for all seeded users is Password123!. 5. To use the email feature, log in as a user and go to the email menu — you'll be asked for a Gmail address and an app password (not your normal Gmail password). Only Gmail's SMTP server is supported.
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or Docker Engine with the Compose plugin)
+
+### Steps
+
+1. Clone the repository and open a terminal in its root folder (where `docker-compose.yml` is):
+
+```
+   git clone https://github.com/Solomonlol/CodeReviews.Console.Phonebook.git
+   cd CodeReviews.Console.Phonebook
+```
+
+2. Get the application image. Either pull the prebuilt one from Docker Hub:
+
+```
+   docker compose pull frontend
+```
+
+   or build it from source:
+
+```
+   docker compose build
+```
+
+3. Start the application:
+
+```
+   docker compose run --rm frontend
+```
+
+   This starts the PostgreSQL container, waits until it is ready, applies the EF Core migrations, seeds demo data and opens the console menu.
+
+> Use `docker compose run`, not `docker compose up`: the app is an interactive console program and needs a terminal for keyboard input.
+
+### Demo data
+
+On the first run five demo users are created (`ivanov`, `petrova`, `sidorov`, `smirnova`, `kozlov`). The password for all of them is `Password123!`.
+
+### Email feature
+
+Sending emails works through Gmail SMTP. Log in, open the email menu and enter your Gmail address and a Google [App Password](https://support.google.com/accounts/answer/185833) (not your normal password).
+
+### Data persistence
+
+The database and the encryption keys for stored email passwords live in Docker volumes (`phonebook-db`, `phonebook-keys`), so your data survives restarts.
+
+### Stop and clean up
+
+```
+docker compose down       # stop containers, keep your data
+docker compose down -v    # stop containers and delete all data
+```
+
+### Docker Hub image
+
+The prebuilt image is published as `solomonlol/phonebook-compose:1.0`.
 
 # What the app does
 
