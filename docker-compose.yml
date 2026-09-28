@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: ${DOCKER_REGISTRY-}frontend:latest
+    image: solomonlol/phonebook-compose:1.0
     build:
       context: .
       dockerfile: Frontend/Dockerfile
