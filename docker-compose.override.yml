@@ -1,0 +1,4 @@
+ services:
+  backend:
+    environment:
+      ConnectionStrings__PostgresConnection: "Host=phonebook.database;Port=5432;Username=postgres;Password=postgres;Database=PhonebookDB"
