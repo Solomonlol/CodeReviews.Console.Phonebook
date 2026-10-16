@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="../PhoneBook.IntegrationTests/PhoneBook.IntegrationTests.csproj" Id="c549328f-c483-45c0-9c91-03a7b0bb49f8" />
+  <Project Path="PhoneBook.IntegrationTests/PhoneBook.IntegrationTests.csproj" Id="c549328f-c483-45c0-9c91-03a7b0bb49f8" />
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>
