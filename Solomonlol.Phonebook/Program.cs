@@ -44,3 +44,5 @@ using (var scope = host.Services.CreateScope())
     //dbContext.Database.EnsureCreated();
     await dbContext.Database.MigrateAsync();
 }
+
+public partial class Program { }
