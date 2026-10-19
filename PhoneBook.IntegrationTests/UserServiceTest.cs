@@ -15,7 +15,7 @@ using Xunit;
 
 namespace PhoneBook.IntegrationTests
 {
-    public sealed class UserServiceTest : IClassFixture<IntegrationTestFixture>
+    public sealed class UserServiceTest : IClassFixture<IntegrationTestFixture>, IAsyncLifetime
     {
         private readonly IntegrationTestFixture _fixture;
         public UserServiceTest(IntegrationTestFixture fixture)
@@ -37,6 +37,8 @@ namespace PhoneBook.IntegrationTests
             services.AddScoped<IContactRepository, ContactRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            services.AddLogging();
 
             services.AddAutoMapper(cfg =>
             {
@@ -84,19 +86,16 @@ namespace PhoneBook.IntegrationTests
 
             //Assert
             await using var checkDb = _fixture.CreateDbContext();
-            var saved = await checkDb.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Login == "root");
+            var saved = await checkDb.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Login == "Root");
 
             Assert.NotNull(saved);
             Assert.Equal("Alex", saved.FirstName);
             Assert.Equal("Alex@gmail.com", saved.Email);
-            Assert.Equal("375291234567", saved.PhoneNumber);
+            Assert.Equal("+375291234567", saved.PhoneNumber);
 
             Assert.NotEqual("SecretPassword123", saved.LoginPasswordHash);
             Assert.NotEqual("password123", saved.EmailPasswordProtected);
-
-            
-
-            
         }
     }
+
 }

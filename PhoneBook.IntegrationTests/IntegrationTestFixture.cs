@@ -28,7 +28,7 @@ namespace PhoneBook.IntegrationTests
         {
             await _container.StartAsync();
 
-            var db = CreateDbContext();
+            await using var db = CreateDbContext();
 
             await db.Database.MigrateAsync();
         }
